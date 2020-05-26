@@ -15,8 +15,8 @@
 /**
  * Expands a collapsible when clicked.
  */
-function expandCollapsible(element) {
-    const content = element.querySelector('.content');
+function expandCollapsible(expectedDivId) {
+    const content = document.querySelector(`#${expectedDivId} .content`);
     if (content.style.maxHeight){
       content.style.maxHeight = null;
     } else {
