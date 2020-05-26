@@ -16,14 +16,10 @@
  * Expands a collapsible when clicked.
  */
 function expandCollapsible(element) {
-    //this.class.toggle("active");
-    var content = element.nextElementSibling;
-    console.log("starting if statements");
+    const content = element.querySelector('.content');
     if (content.style.maxHeight){
-      console.log("got to here");
       content.style.maxHeight = null;
     } else {
-      console.log("got to second part");
       content.style.maxHeight = content.scrollHeight + "px";
     }
-  }
+}
