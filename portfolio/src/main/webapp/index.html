@@ -2,17 +2,29 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>Andrew Masek</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+    <div id="page">
+        <h1>Andrew Masek</h1>
+        <button class="collapsible" onclick="expandCollapsible(this)">About Me</button>
+        <div class="content">
+            <p>Hi! I'm Andrew Masek, a rising sophomore at Purdue University studying Computer Science. --will insert more here--</p>
+        </div>
+        <button class="collapsible" onclick="expandCollapsible(this)">Work Experience</button>
+        <div class="content">
+            <p>--will insert more about past work experiences here--</p>
+        </div>
+        <button class="collapsible" onclick="expandCollapsible(this)">Projects</button>
+        <div class="content">
+            <p>--will insert more about projects I have worked on here--</p>
+        </div>
+        <button class="collapsible" onclick="expandCollapsible(this)">Contact Info</button>
+        <div class="content">
+            <p>--will insert contact info--</p>
+        </div>
     </div>
   </body>
 </html>

@@ -13,16 +13,17 @@
 // limitations under the License.
 
 /**
- * Adds a random greeting to the page.
+ * Expands a collapsible when clicked.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
-}
+function expandCollapsible(element) {
+    //this.class.toggle("active");
+    var content = element.nextElementSibling;
+    console.log("starting if statements");
+    if (content.style.maxHeight){
+      console.log("got to here");
+      content.style.maxHeight = null;
+    } else {
+      console.log("got to second part");
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  }
