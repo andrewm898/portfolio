@@ -1,25 +1,41 @@
-.collapsible {
-  background-color: rgb(253, 253, 253);
-  color: rgb(108, 108, 110);
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-}
-
-.content {
-  padding: 0 18px;
-  background-color: white;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
+body {
+  background-color: lightGray;
 }
 
 #page {
   margin-left: auto;
   margin-right: auto;
-  border: 
+  width: 75%;
+}
+
+.float-child {
+  width: 50%;
+  float: left;
+}
+
+#photos {
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.collapsible {
+  background-color: rgb(253, 253, 253);
+  color: rgb(108, 108, 110);
+  cursor: pointer;
+  padding: 30px;
+  width: 100%;
+  border: inset;
+  border-radius: 10px;
+  text-align: left;
+  outline: none;
+  font-size: 20px;
+}
+
+.content {
+  padding: 0 18px;
+  background-color: LightGray;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
 }
