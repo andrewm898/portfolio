@@ -14,24 +14,30 @@
 
 class SlideShow {
     constructor( /**@type{HTMLElement}*/ prevButton,
-        /**@type{HTMLElement}*/ nextButton, ) {
+        /**@type{HTMLElement}*/ nextButton, 
+        /**@type{HTMLElement}*/ numText) {
         this.prevButton = prevButton;
         this.nextButton = nextButton;
-        this.counter = 0;
+        this.numText = numText;
+        this.slideIndex = 0;
         this.prevButton.addEventListener('click', () => this.handlePrev());
         this.nextButton.addEventListener('click', () => this.handleNext());
     }
 
     handlePrev() {
-        this.counter--;
-        this.showSlides(this.counter);
-        
+        this.slideIndex--;
+        this.showSlides(this.slideIndex);
+        this.handleText(this.slideIndex + 1);
     }
 
     handleNext() {
-        this.counter++;
-        this.showSlides(this.counter);
-        
+        this.slideIndex++;
+        this.showSlides(this.slideIndex);
+        this.handleText(this.slideIndex + 1);
+    }
+
+    handleText(slideNum) {
+        this.numText.textContent = `${slideNum} / 4`;
     }
 
     /**
@@ -42,23 +48,29 @@ class SlideShow {
         const slides = document.querySelectorAll('.slides');
         if (slideNum >= slides.length) {
             slideNum = 0;
-            this.counter = 0;
+            this.slideIndex = 0;
         }
         if (slideNum < 0) {
             slideNum = slides.length - 1;
-            this.counter = slides.length - 1;
+            this.slideIndex = slides.length - 1;
         }
         for (i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
         }
         slides[slideNum].style.display = "block";
     }
-
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const slideshow = new SlideShow(document.getElementById('prev'),
-    document.getElementById('next'));
+    const container = document.getElementById('photos');
+    const div = document.createElement('div');
+    div.setAttribute("id", "numtext");
+    div.classList.add('numbertext');
+    div.textContent = "1 / 4";
+    container.appendChild(div);
+    
+    const slideshow = new SlideShow(document.getElementById('prev'),
+        document.getElementById('next'), document.getElementById('numtext'));
 });
 
 
