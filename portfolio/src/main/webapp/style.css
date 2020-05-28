@@ -26,7 +26,7 @@ body {
 }
 
 .numbertext {
-  color: #f2f2f2;
+  color: #fdfafa;
   font-size: 12px;
   padding: 8px 12px;
   position: absolute;
@@ -41,7 +41,7 @@ body {
     display: block;
 }
 
-.prev, .next {
+.prev-button, .next-button {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -50,15 +50,12 @@ body {
   padding: 16px;
   color: white;
   font-weight: bold;
-  font-size: 18px;
-  transition: 0.5s ease;
-  border-radius: 0 3px 3px 0;
+  font-size: 30px;
   user-select: none;
 }
 
-.next {
+.next-button {
   right: 0;
-  border-radius: 3px 0 0 3px;
 }
 
 .collapsible {
