@@ -40,18 +40,18 @@ class SlideShow {
     showSlides(slideNum) {
         let i;
         const slides = document.querySelectorAll('.slides');
-        if (slideNum > slides.length) {
-            slideNum = 1;
-            this.counter = 1;
+        if (slideNum >= slides.length) {
+            slideNum = 0;
+            this.counter = 0;
         }
-        if (slideNum < 1) {
-            slideNum = slides.length;
-            this.counter = slides.length;
+        if (slideNum < 0) {
+            slideNum = slides.length - 1;
+            this.counter = slides.length - 1;
         }
         for (i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
         }
-        slides[slideNum-1].style.display = "block";
+        slides[slideNum].style.display = "block";
     }
 
 }
