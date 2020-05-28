@@ -9,6 +9,7 @@
   <body>
     <div id="page">
         <h1>Andrew Masek</h1>
+        <!--This is the container for all information-->
         <div id="info" class="float-child">
             <div id="about">
                 <button class="collapsible" onclick="expandCollapsible('about')">About Me</button>
@@ -35,9 +36,26 @@
                 </div>
             </div>
         </div>
+        <!--This is the photo gallery container-->
         <div id="photos" class="float-child">
-            <p>--will add photo gallery here</p>
-            <img src="/images/IMG_3702.JPG">
+            <div id="first-slide" class="slides">
+                <div class="numbertext">1 / 4</div>
+                    <img src="/images/porchlights.JPG" style="width:100%">
+            </div>
+            <div class="slides">
+                <div class="numbertext">2 / 4</div>
+                    <img src="/images/pokebowl.JPG" style="width:100%">
+            </div>
+            <div class="slides">
+                <div class="numbertext">3 / 4</div>
+                    <img src="/images/doghat.JPG" style="width:100%">
+            </div>
+            <div class="slides">
+                <div class="numbertext">4 / 4</div>
+                    <img src="/images/androidpillow.JPG" style="width:100%">
+            </div>
+            <a class="prev-button" onclick="moveSlides(-1)">&Precedes;</a>
+            <a class="next-button" onclick="moveSlides(1)">&Succeeds;</a>
         </div>
     </div>
   </body>
