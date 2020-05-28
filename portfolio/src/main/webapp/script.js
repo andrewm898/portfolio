@@ -12,33 +12,55 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-let slideIndex = 1;
+class SlideShow {
+    constructor( /**@type{HTMLElement}*/ prevButton,
+        /**@type{HTMLElement}*/ nextButton, ) {
+        this.prevButton = prevButton;
+        this.nextButton = nextButton;
+        this.counter = 0;
+        this.prevButton.addEventListener('click', () => this.handlePrev());
+        this.nextButton.addEventListener('click', () => this.handleNext());
+    }
 
-/**
- * Applies number received from next/prev buttons (1 or -1) to show next or previous slide
- * from the current slide index.
- */
-function moveSlides(n) {
-  showSlides(slideIndex += n);
+    handlePrev() {
+        this.counter--;
+        this.showSlides(this.counter);
+        
+    }
+
+    handleNext() {
+        this.counter++;
+        this.showSlides(this.counter);
+        
+    }
+
+    /**
+    * Shows the slide at the index of the parameter.
+    */
+    showSlides(slideNum) {
+        let i;
+        const slides = document.querySelectorAll('.slides');
+        if (slideNum > slides.length) {
+            slideNum = 1;
+            this.counter = 1;
+        }
+        if (slideNum < 1) {
+            slideNum = slides.length;
+            this.counter = slides.length;
+        }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideNum-1].style.display = "block";
+    }
+
 }
 
-/**
- * Shows slide at slideIndex and checks/adjusts if index is out of bounds.
- */
-function showSlides(n) {
-    let i;
-    const slides = document.querySelectorAll('.slides');
-    if (n > slides.length) {
-        slideIndex = 1;
-    }
-    if (n < 1) {
-        slideIndex = slides.length;
-    }
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    slides[slideIndex-1].style.display = "block";
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const slideshow = new SlideShow(document.getElementById('prev'),
+    document.getElementById('next'));
+});
+
 
 /**
  * Expands a collapsible when clicked.
