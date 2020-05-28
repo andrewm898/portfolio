@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var slideIndex = 1;
+let slideIndex = 1;
 
 /**
  * Applies number received from next/prev buttons (1 or -1) to show next or previous slide
