@@ -1,25 +1,51 @@
 body {
-  background-color: lightGray;
+  height: 100%;
+  margin: 0;
+  background-image: url("/images/sunrise.JPG");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #page {
   margin-left: auto;
   margin-right: auto;
-  border-left-style: inset;
-  border-right-style: outset;
-  background-color: gray;
+  background-color: rgba(209, 204, 204, 0);
   overflow: hidden;
   width: 75%;
 }
 
+h1 {
+  font-family: Georgia, serif;
+  font-weight: bold;
+  font-style: oblique;
+  font-size: 75px;
+}
+
+h2 {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  font-style: oblique;
+  text-align: center;
+  width: 100%
+}
+
 .float-child {
-  width: 50%;
+  width: 40%;
   float: left;
 }
 
+#info {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
 #photos {
-  background-color: white;
+  background-color: rgba(157, 216, 255, 0.877);
   border-radius: 10px;
+  padding: 20px;
   max-width: 1000px;
   position: relative;
   margin: auto;
@@ -27,19 +53,21 @@ body {
 
 .numbertext {
   color: #fdfafa;
-  font-size: 12px;
-  padding: 8px 12px;
+  font-size: 20px;
+  padding: 20px 30px;
   position: absolute;
-  top: 0;
+  top: 7%;
 }
 
 .slides {
-    display: none;
-    width: 100%;
+  display: none;
+  border-radius: 10px;
+  margin: auto;
+  width: 100%;
 }
 
 .active-slide {
-    display: block;
+  display: block;
 }
 
 .prev-button, .next-button {
@@ -48,7 +76,7 @@ body {
   top: 50%;
   width: auto;
   margin-top: -22px;
-  padding: 16px;
+  padding: 32px;
   color: white;
   font-weight: bold;
   font-size: 30px;
@@ -60,8 +88,10 @@ body {
 }
 
 .collapsible {
-  background-color: rgb(253, 253, 253);
-  color: rgb(108, 108, 110);
+  background-color: rgba(157, 216, 255, 0.877);
+  font-family: Georgia, serif;
+  font-weight: normal;
+  font-style: oblique;
   cursor: pointer;
   padding: 30px;
   width: 100%;
@@ -74,7 +104,8 @@ body {
 
 .content {
   padding: 0 18px;
-  background-color: LightGray;
+  background-color: rgba(211, 131, 231, 0.671);
+  border-radius: 10px;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
