@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Andrew Masek</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body>
-    <div id="page">
-        <h1>Andrew Masek</h1>
-        <div id="info" class="float-child">
-            <div id="about">
-                <button class="collapsible" onclick="expandCollapsible('about')">About Me</button>
-                <div class="content">
-                    <p>Hi! I'm Andrew Masek, a rising sophomore at Purdue University studying Computer Science.</p>
-                </div>
-            </div>
-            <div id="work">
-                <button class="collapsible" onclick="expandCollapsible('work')">Work Experience</button>
-                <div class="content">
-                    <p>--will insert more about past work experiences here--</p>
-                </div>
-            </div>
-            <div id="projects">
-                <button class="collapsible" onclick="expandCollapsible('projects')">Projects</button>
-                <div class="content">
-                    <p>--will insert more about projects I have worked on here--</p>
-                </div>
-            </div>
-            <div id="contact">
-                <button class="collapsible" onclick="expandCollapsible('contact')">Contact Info</button>
-                <div class="content">
-                    <p>--will insert contact info--</p>
-                </div>
-            </div>
-        </div>
-        <div id="photos" class="float-child">
-            <p>--will add photo gallery here</p>
-            <img src="/images/IMG_3702.JPG">
-        </div>
-    </div>
-  </body>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Andrew Masek</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="script.js"></script>
+</head>
+
+<body>
+	<div id="page">
+		<h1>Andrew Masek</h1>
+		<!--This is the container for all information-->
+		<div id="info" class="float-child">
+			<div id="about">
+				<button class="collapsible" onclick="expandCollapsible('about')">About Me</button>
+				<div class="content">
+					<p>Hi! I'm Andrew Masek, a rising sophomore at Purdue University studying Computer Science.</p>
+				</div>
+			</div>
+			<div id="work">
+				<button class="collapsible" onclick="expandCollapsible('work')">Work Experience</button>
+				<div class="content">
+					<p>--will insert more about past work experiences here--</p>
+				</div>
+			</div>
+			<div id="projects">
+				<button class="collapsible" onclick="expandCollapsible('projects')">Projects</button>
+				<div class="content">
+					<p>--will insert more about projects I have worked on here--</p>
+				</div>
+			</div>
+			<div id="contact">
+				<button class="collapsible" onclick="expandCollapsible('contact')">Contact Info</button>
+				<div class="content">
+					<p>--will insert contact info--</p>
+				</div>
+			</div>
+		</div>
+		<!--This is the photo gallery container-->
+		<div id="photos" class="float-child"></div>
+	</div>
+</body>
+
 </html>

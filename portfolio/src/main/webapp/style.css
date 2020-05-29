@@ -5,6 +5,10 @@ body {
 #page {
   margin-left: auto;
   margin-right: auto;
+  border-left-style: inset;
+  border-right-style: outset;
+  background-color: gray;
+  overflow: hidden;
   width: 75%;
 }
 
@@ -16,7 +20,43 @@ body {
 #photos {
   background-color: white;
   border-radius: 10px;
-  text-align: center;
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+.numbertext {
+  color: #fdfafa;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+.slides {
+    display: none;
+    width: 100%;
+}
+
+.active-slide {
+    display: block;
+}
+
+.prev-button, .next-button {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  user-select: none;
+}
+
+.next-button {
+  right: 0;
 }
 
 .collapsible {
