@@ -38,6 +38,10 @@ body {
     width: 100%;
 }
 
+.active-slide {
+    display: block;
+}
+
 .prev-button, .next-button {
   cursor: pointer;
   position: absolute;
