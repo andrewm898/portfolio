@@ -68,10 +68,8 @@ class SlideShow {
     */
     showSlides(slideNum) {
         this.slideIndex = Math.min(Math.max(slideNum, 0), this.slideElements.length - 1);
-        slideNum = this.slideIndex;
-        
-        this.slideElements[slideNum].classList.add("active-slide");
-        this.numtext.textContent = `${slideNum + 1} / ${this.slideElements.length}`;
+        this.slideElements[this.slideIndex].classList.add("active-slide");
+        this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
     }
 }
 
