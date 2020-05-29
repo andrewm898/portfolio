@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/**
+*   SlideShow is a collection of images that can be clicked through by the user.
+*/
 class SlideShow {
     constructor( /**@type{HTMLElement}*/ photosElement) {
         this.prevButton = document.createElement('a');
@@ -22,40 +25,41 @@ class SlideShow {
         this.nextButton.addEventListener('click', () => this.handleNext());
         
         /* Creating next button */
-        this.nextButton.textContent = String.fromCharCode(0x027E9);
+        this.nextButton.textContent = "⟩"
         this.nextButton.classList.add('next-button');
         photosElement.appendChild(this.nextButton);
         
         /* Creating prev button */
-        this.prevButton.textContent = String.fromCharCode(0x027E8);
+        this.prevButton.textContent = "⟨";
         this.prevButton.classList.add('prev-button');
         photosElement.appendChild(this.prevButton);
         
         /* Creating image array */
         this.slideElements = [];
-        for (const source of ["/images/porchlights.JPG", "/images/pokebowl.JPG",
-                              "/images/doghat.JPG", "/images/androidpillow.JPG"]) {
+        for (const source of ["/images/porchlights.JPG",
+                              "/images/pokebowl.JPG",
+                              "/images/doghat.JPG",
+                              "/images/androidpillow.JPG"]) {
             const image = document.createElement('img');
             image.classList.add('slides');
             image.src = source;
             this.slideElements.push(image);
             photosElement.appendChild(image);
         }
-        this.slideCount = this.slideElements.length;
-        this.slideElements[0].style.display = "block";
+        this.slideElements[0].classList.add("active-slide");
 
         /* Creating slide number label */
         this.numtext.classList.add('numbertext');
-        this.numtext.textContent = `1 / ${this.slideCount}`;
+        this.numtext.textContent = `1 / ${this.slideElements.length}`;
         photosElement.appendChild(this.numtext);
     }
     handlePrev() {
-        this.slideElements[this.slideIndex].style.display = 'none';
+        this.slideElements[this.slideIndex].classList.remove("active-slide");
         this.slideIndex--;
         this.showSlides(this.slideIndex);
     }
     handleNext() {
-        this.slideElements[this.slideIndex].style.display = 'none';
+        this.slideElements[this.slideIndex].classList.remove("active-slide");
         this.slideIndex++;
         this.showSlides(this.slideIndex);
     }
@@ -63,16 +67,17 @@ class SlideShow {
     * Shows the slide at the index of the parameter.
     */
     showSlides(slideNum) {
-        if (slideNum >= this.slideCount) {
+        
+        if (slideNum >= this.slideElements.length) {
             slideNum = 0;
             this.slideIndex = 0;
         }
         if (slideNum < 0) {
-            slideNum = this.slideCount - 1;
-            this.slideIndex = this.slideCount - 1;
+            slideNum = this.slideElements.length - 1;
+            this.slideIndex = this.slideElements.length - 1;
         }
-        this.slideElements[slideNum].style.display = "block";
-        this.numtext.textContent = `${slideNum + 1} / ${this.slideCount}`;
+        this.slideElements[slideNum].classList.add("active-slide");
+        this.numtext.textContent = `${slideNum + 1} / ${this.slideElements.length}`;
     }
 }
 
