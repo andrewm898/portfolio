@@ -35,10 +35,7 @@ body {
 
 .slides {
     display: none;
-}
-
-.slides:first-child {
-    display: block;
+    width: 100%;
 }
 
 .prev-button, .next-button {

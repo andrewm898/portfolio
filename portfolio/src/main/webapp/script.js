@@ -13,75 +13,82 @@
 // limitations under the License.
 
 class SlideShow {
-    constructor( /**@type{HTMLElement}*/ prevButton,
-        /**@type{HTMLElement}*/ nextButton, 
-        /**@type{HTMLElement}*/ numText) {
-        this.prevButton = prevButton;
-        this.nextButton = nextButton;
-        this.numText = numText;
+    constructor( /**@type{HTMLElement}*/ photosElement) {
+        this.prevButton = document.createElement('a');
+        this.nextButton = document.createElement('a');
+        this.numtext = document.createElement('div');
         this.slideIndex = 0;
         this.prevButton.addEventListener('click', () => this.handlePrev());
         this.nextButton.addEventListener('click', () => this.handleNext());
-    }
+        
+        /* Creating next button */
+        this.nextButton.textContent = String.fromCharCode(0x027E9);
+        this.nextButton.classList.add('next-button');
+        photosElement.appendChild(this.nextButton);
+        
+        /* Creating prev button */
+        this.prevButton.textContent = String.fromCharCode(0x027E8);
+        this.prevButton.classList.add('prev-button');
+        photosElement.appendChild(this.prevButton);
+        
+        /* Creating image array */
+        this.slideElements = [];
+        for (const source of ["/images/porchlights.JPG", "/images/pokebowl.JPG",
+                              "/images/doghat.JPG", "/images/androidpillow.JPG"]) {
+            const image = document.createElement('img');
+            image.classList.add('slides');
+            image.src = source;
+            this.slideElements.push(image);
+            photosElement.appendChild(image);
+        }
+        this.slideCount = this.slideElements.length;
+        this.slideElements[0].style.display = "block";
 
+        /* Creating slide number label */
+        this.numtext.classList.add('numbertext');
+        this.numtext.textContent = `1 / ${this.slideCount}`;
+        photosElement.appendChild(this.numtext);
+    }
     handlePrev() {
+        this.slideElements[this.slideIndex].style.display = 'none';
         this.slideIndex--;
         this.showSlides(this.slideIndex);
-        this.handleText(this.slideIndex + 1);
     }
-
     handleNext() {
+        this.slideElements[this.slideIndex].style.display = 'none';
         this.slideIndex++;
         this.showSlides(this.slideIndex);
-        this.handleText(this.slideIndex + 1);
     }
-
-    handleText(slideNum) {
-        this.numText.textContent = `${slideNum} / 4`;
-    }
-
     /**
     * Shows the slide at the index of the parameter.
     */
     showSlides(slideNum) {
-        let i;
-        const slides = document.querySelectorAll('.slides');
-        if (slideNum >= slides.length) {
+        if (slideNum >= this.slideCount) {
             slideNum = 0;
             this.slideIndex = 0;
         }
         if (slideNum < 0) {
-            slideNum = slides.length - 1;
-            this.slideIndex = slides.length - 1;
+            slideNum = this.slideCount - 1;
+            this.slideIndex = this.slideCount - 1;
         }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        slides[slideNum].style.display = "block";
+        this.slideElements[slideNum].style.display = "block";
+        this.numtext.textContent = `${slideNum + 1} / ${this.slideCount}`;
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('photos');
-    const div = document.createElement('div');
-    div.setAttribute("id", "numtext");
-    div.classList.add('numbertext');
-    div.textContent = "1 / 4";
-    container.appendChild(div);
-    
-    const slideshow = new SlideShow(document.getElementById('prev'),
-        document.getElementById('next'), document.getElementById('numtext'));
+    const slideshow = new SlideShow(document.getElementById('photos'));
 });
-
 
 /**
  * Expands a collapsible when clicked.
  */
 function expandCollapsible(expectedDivId) {
     const content = document.querySelector(`#${expectedDivId} .content`);
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
+    if (content.style.maxHeight) {
+        content.style.maxHeight = null;
     } else {
-      content.style.maxHeight = `${content.scrollHeight}px`;
+        content.style.maxHeight = `${content.scrollHeight}px`;
     }
 }
