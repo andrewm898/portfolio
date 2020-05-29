@@ -67,7 +67,15 @@ class SlideShow {
     * Shows the slide at the index of the parameter.
     */
     showSlides(slideNum) {
-        this.slideIndex = Math.min(Math.max(slideNum, 0), this.slideElements.length - 1);
+        if (slideNum >= this.slideElements.length) {
+            slideNum = 0;
+            this.slideIndex = 0;
+        }
+        if (slideNum < 0) {
+            slideNum = this.slideElements.length - 1;
+            this.slideIndex = this.slideElements.length - 1;
+        }
+
         this.slideElements[this.slideIndex].classList.add("active-slide");
         this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
     }
