@@ -71,7 +71,7 @@ class SlideShow {
             slideNum = 0;
             this.slideIndex = 0;
         }
-        if (slideNum < 0) {
+        else if (slideNum < 0) {
             slideNum = this.slideElements.length - 1;
             this.slideIndex = this.slideElements.length - 1;
         }
