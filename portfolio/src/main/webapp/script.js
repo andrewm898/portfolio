@@ -56,23 +56,23 @@ class SlideShow {
     handlePrev() {
         this.slideElements[this.slideIndex].classList.remove("active-slide");
         this.slideIndex--;
-        this.fixSlideIndex(this.slideIndex);
+        this.fixSlideIndex();
         this.showSlides();
     }
     handleNext() {
         this.slideElements[this.slideIndex].classList.remove("active-slide");
         this.slideIndex++;
-        this.fixSlideIndex(this.slideIndex);
+        this.fixSlideIndex();
         this.showSlides();
     }
     /**
     * Adjusts the slide index if out of bounds
     */
-    fixSlideIndex(originalIndex) {
-        if (originalIndex >= this.slideElements.length) {
+    fixSlideIndex() {
+        if (this.slideIndex >= this.slideElements.length) {
             this.slideIndex = 0;
         }
-        else if (originalIndex < 0) {
+        else if (this.slideIndex < 0) {
             this.slideIndex = this.slideElements.length - 1;
         }
     }
