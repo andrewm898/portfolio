@@ -86,9 +86,19 @@ class SlideShow {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateQuotesFromServer();
     const container = document.getElementById('photos');
     const slideshow = new SlideShow(document.getElementById('photos'));
 });
+
+/**
+ * Fetches a message from the server to update the page with.
+ */
+async function updateQuotesFromServer() {
+  const response = await fetch('/data');
+  const quote = await response.text();
+  document.getElementById('server-message').innerText = quote;
+}
 
 /**
  * Expands a collapsible when clicked.
