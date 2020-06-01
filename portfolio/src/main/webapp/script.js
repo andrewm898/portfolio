@@ -56,26 +56,30 @@ class SlideShow {
     handlePrev() {
         this.slideElements[this.slideIndex].classList.remove("active-slide");
         this.slideIndex--;
-        this.showSlides(this.slideIndex);
+        this.fixSlideIndex();
+        this.showSlides();
     }
     handleNext() {
         this.slideElements[this.slideIndex].classList.remove("active-slide");
         this.slideIndex++;
-        this.showSlides(this.slideIndex);
+        this.fixSlideIndex();
+        this.showSlides();
+    }
+    /**
+    * Adjusts the slide index if out of bounds
+    */
+    fixSlideIndex() {
+        if (this.slideIndex >= this.slideElements.length) {
+            this.slideIndex = 0;
+        }
+        else if (this.slideIndex < 0) {
+            this.slideIndex = this.slideElements.length - 1;
+        }
     }
     /**
     * Shows the slide at the index of the parameter.
     */
-    showSlides(slideNum) {
-        if (slideNum >= this.slideElements.length) {
-            slideNum = 0;
-            this.slideIndex = 0;
-        }
-        else if (slideNum < 0) {
-            slideNum = this.slideElements.length - 1;
-            this.slideIndex = this.slideElements.length - 1;
-        }
-
+    showSlides() {
         this.slideElements[this.slideIndex].classList.add("active-slide");
         this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
     }
