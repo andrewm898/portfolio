@@ -96,8 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function updateQuotesFromServer() {
   const response = await fetch('/data');
-  const quote = await response.text();
-  document.getElementById('server-message').innerText = quote;
+  const messages = await response.json();
+
+  listElement = document.getElementById('server-message');
+
+  listElement.innerHTML = '';
+  listElement.appendChild(
+        createListElement('Message 1: ' + messages[0].message));
+  listElement.appendChild(
+        createListElement('Message 2: ' + messages[1].message));
+  listElement.appendChild(
+        createListElement('Message 3: ' + messages[2].message));
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
 
 /**
