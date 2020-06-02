@@ -86,9 +86,28 @@ class SlideShow {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateQuotesFromServer();
     const container = document.getElementById('photos');
     const slideshow = new SlideShow(document.getElementById('photos'));
 });
+
+/**
+ * Fetches messages from the server to update the page with.
+ */
+async function updateQuotesFromServer() {
+  const response = await fetch('/data');
+  const messages = await response.json();
+
+  messageList = document.getElementById('server-message');
+
+  messageList.innerHTML = '';
+  let i;
+  for (i = 0; i < messages.length; i++) {
+    const liElement = document.createElement('li');
+    liElement.textContent = `Message ${i + 1}: ${messages[i]}`;
+    messageList.appendChild(liElement);
+  }
+}
 
 /**
  * Expands a collapsible when clicked.
