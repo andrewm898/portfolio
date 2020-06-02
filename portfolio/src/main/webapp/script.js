@@ -92,28 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Fetches a message from the server to update the page with.
+ * Fetches messages from the server to update the page with.
  */
 async function updateQuotesFromServer() {
   const response = await fetch('/data');
   const messages = await response.json();
 
-  listElement = document.getElementById('server-message');
+  messageList = document.getElementById('server-message');
 
-  listElement.innerHTML = '';
-  listElement.appendChild(
-        createListElement('Message 1: ' + messages[0].message));
-  listElement.appendChild(
-        createListElement('Message 2: ' + messages[1].message));
-  listElement.appendChild(
-        createListElement('Message 3: ' + messages[2].message));
-}
-
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+  messageList.innerHTML = '';
+  let i;
+  for (i = 0; i < 3; i++) {
+    const liElement = document.createElement('li');
+    liElement.innerText = `Message ${i + 1}: ${messages[i]}`;
+    messageList.appendChild(liElement);
+  }
 }
 
 /**
