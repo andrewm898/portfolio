@@ -98,7 +98,7 @@ async function updateQuotesFromServer() {
 
   messageList.innerHTML = '';
   let i;
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < messages.length; i++) {
     const liElement = document.createElement('li');
     liElement.innerText = `Message ${i + 1}: ${messages[i]}`;
     messageList.appendChild(liElement);
