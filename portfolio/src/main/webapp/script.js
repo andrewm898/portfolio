@@ -98,11 +98,10 @@ async function updateQuotesFromServer() {
   const response = await fetch('/data');
   const messages = await response.json();
 
-  messageList = document.getElementById('server-message');
+  messageList = document.getElementById('server-messages');
 
   messageList.innerHTML = '';
-  let i;
-  for (i = 0; i < messages.length; i++) {
+  for (let i = 0; i < messages.length; i++) {
     const liElement = document.createElement('li');
     liElement.textContent = `Message ${i + 1}: ${messages[i]}`;
     messageList.appendChild(liElement);
