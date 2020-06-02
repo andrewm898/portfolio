@@ -92,12 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Fetches a message from the server to update the page with.
+ * Fetches messages from the server to update the page with.
  */
 async function updateQuotesFromServer() {
   const response = await fetch('/data');
-  const quote = await response.text();
-  document.getElementById('server-message').innerText = quote;
+  const messages = await response.json();
+
+  messageList = document.getElementById('server-message');
+
+  messageList.innerHTML = '';
+  let i;
+  for (i = 0; i < messages.length; i++) {
+    const liElement = document.createElement('li');
+    liElement.textContent = `Message ${i + 1}: ${messages[i]}`;
+    messageList.appendChild(liElement);
+  }
 }
 
 /**
