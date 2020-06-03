@@ -61,31 +61,19 @@ class SlideShow {
         this.makeActiveIndex(this.slideIndex + 1);
     }
     /**
-    * @private Adjusts the slide index if out of bounds.
+    * Makes correct index the active one, calls function to display it.
     */
-    fixSlideIndex_() {
+    makeActiveIndex(index) {
+        this.slideElements[this.slideIndex].classList.remove("active-slide");
+        this.slideIndex = index;
         if (this.slideIndex >= this.slideElements.length) {
             this.slideIndex = 0;
         }
         else if (this.slideIndex < 0) {
             this.slideIndex = this.slideElements.length - 1;
         }
-    }
-    /**
-    * Makes correct index the active one, calls function to display it.
-    */
-    makeActiveIndex(index) {
-        this.slideElements[this.slideIndex].classList.remove("active-slide");
-        this.slideIndex = index;
-        this.fixSlideIndex_();
-        this.showActiveIndex();
-    }
-    /**
-    * Displays slide at slideIndex.
-    */
-    showActiveIndex() {
-      this.slideElements[this.slideIndex].classList.add("active-slide");
-      this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
+        this.slideElements[this.slideIndex].classList.add("active-slide");
+        this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
     }
 }
 
