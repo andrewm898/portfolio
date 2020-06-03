@@ -54,6 +54,7 @@ class SlideShow {
         photosElement.appendChild(this.numtext);
     }
     handlePrev() {
+
         this.makeActiveIndex(this.slideIndex - 1);
     }
     handleNext() {
