@@ -54,21 +54,15 @@ class SlideShow {
         photosElement.appendChild(this.numtext);
     }
     handlePrev() {
-        this.slideElements[this.slideIndex].classList.remove("active-slide");
-        this.slideIndex--;
-        this.fixSlideIndex();
-        this.showSlides();
+        this.makeActiveIndex(this.slideIndex - 1);
     }
     handleNext() {
-        this.slideElements[this.slideIndex].classList.remove("active-slide");
-        this.slideIndex++;
-        this.fixSlideIndex();
-        this.showSlides();
+        this.makeActiveIndex(this.slideIndex + 1);
     }
     /**
-    * Adjusts the slide index if out of bounds
+    * @private Adjusts the slide index if out of bounds.
     */
-    fixSlideIndex() {
+    fixSlideIndex_() {
         if (this.slideIndex >= this.slideElements.length) {
             this.slideIndex = 0;
         }
@@ -77,11 +71,20 @@ class SlideShow {
         }
     }
     /**
-    * Shows the slide at the index of the parameter.
+    * Makes correct index the active one, calls function to display it.
     */
-    showSlides() {
-        this.slideElements[this.slideIndex].classList.add("active-slide");
-        this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
+    makeActiveIndex(index) {
+        this.slideElements[this.slideIndex].classList.remove("active-slide");
+        this.slideIndex = index;
+        this.fixSlideIndex_();
+        this.showActiveIndex();
+    }
+    /**
+    * Displays slide at slideIndex.
+    */
+    showActiveIndex() {
+      this.slideElements[this.slideIndex].classList.add("active-slide");
+      this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
     }
 }
 
