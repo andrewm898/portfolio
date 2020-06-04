@@ -54,32 +54,24 @@ class SlideShow {
         photosElement.appendChild(this.numtext);
     }
     handlePrev() {
-        this.slideElements[this.slideIndex].classList.remove("active-slide");
-        this.slideIndex--;
-        this.fixSlideIndex();
-        this.showSlides();
+
+        this.makeActiveIndex(this.slideIndex - 1);
     }
     handleNext() {
-        this.slideElements[this.slideIndex].classList.remove("active-slide");
-        this.slideIndex++;
-        this.fixSlideIndex();
-        this.showSlides();
+        this.makeActiveIndex(this.slideIndex + 1);
     }
     /**
-    * Adjusts the slide index if out of bounds
+    * Makes correct index the active one, calls function to display it.
     */
-    fixSlideIndex() {
+    makeActiveIndex(index) {
+        this.slideElements[this.slideIndex].classList.remove("active-slide");
+        this.slideIndex = index;
         if (this.slideIndex >= this.slideElements.length) {
             this.slideIndex = 0;
         }
         else if (this.slideIndex < 0) {
             this.slideIndex = this.slideElements.length - 1;
         }
-    }
-    /**
-    * Shows the slide at the index of the parameter.
-    */
-    showSlides() {
         this.slideElements[this.slideIndex].classList.add("active-slide");
         this.numtext.textContent = `${this.slideIndex + 1} / ${this.slideElements.length}`;
     }
@@ -98,11 +90,10 @@ async function updateQuotesFromServer() {
   const response = await fetch('/data');
   const messages = await response.json();
 
-  messageList = document.getElementById('server-message');
+  messageList = document.getElementById('server-messages');
 
   messageList.innerHTML = '';
-  let i;
-  for (i = 0; i < messages.length; i++) {
+  for (let i = 0; i < messages.length; i++) {
     const liElement = document.createElement('li');
     liElement.textContent = `Message ${i + 1}: ${messages[i]}`;
     messageList.appendChild(liElement);

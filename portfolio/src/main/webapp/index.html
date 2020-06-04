@@ -15,14 +15,14 @@
 		<div id="info" class="float-child">
 			<div id="about">
 				<button class="collapsible" onclick="expandCollapsible('about')">About Me</button>
-				<div id="server-message" class="content">
+				<div class="content">
 					<p>Hi! I'm Andrew Masek, a rising sophomore at Purdue University studying Computer Science.</p>
 				</div>
 			</div>
 			<div id="work">
 				<button class="collapsible" onclick="expandCollapsible('work')">Work Experience</button>
 				<div class="content">
-					<p>--will insert more about past work experiences here--</p>
+					<p>--will insert more about past work experiences here.--</p>
 				</div>
 			</div>
 			<div id="projects">
@@ -35,6 +35,16 @@
 				<button class="collapsible" onclick="expandCollapsible('contact')">Contact Info</button>
 				<div class="content">
 					<p>--will insert contact info--</p>
+				</div>
+			</div>
+      			<div id="blog">
+				<button class="collapsible" onclick="expandCollapsible('blog')">Blog</button>
+				<div class="content">
+					<form action="/data" method="POST">
+            					<textarea name="text-input"></textarea>
+            					<input type="submit" />
+          				</form>
+         			 	<div id="server-messages"></div>
 				</div>
 			</div>
 		</div>
