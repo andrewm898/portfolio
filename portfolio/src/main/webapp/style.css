@@ -99,12 +99,12 @@ h2 {
   border-radius: 10px;
   text-align: left;
   outline: none;
-  font-size: 20px;
+  font-size: 30px;
 }
 
 .content {
   padding: 0 18px;
-  background-color: rgba(211, 131, 231, 0.671);
+  background-color: rgba(255, 188, 120, 0.76);
   border-radius: 10px;
   max-height: 0;
   overflow: hidden;

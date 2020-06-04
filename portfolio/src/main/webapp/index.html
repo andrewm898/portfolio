@@ -42,11 +42,12 @@
 				<div class="content">
           <div id="server-messages"></div>
 					<form action="/data" method="POST">
-						<textarea name="text-input"></textarea>
+						<textarea name="text-input" maxlength="180"></textarea>
+            <input type="text" name="username"></input>
             <p>Max Comments:</p>
             <input type="number" name="max-comments"></input>
             <input type="submit" />
-            <button onclick="deleteMessages()">Delete Messages</button>
+            <button onclick="deleteMessages()">Delete Messages</button> 
           </form>
 				</div>
 			</div>
