@@ -40,11 +40,14 @@
 			<div id="blog">
 				<button class="collapsible" onclick="expandCollapsible('blog')">Blog</button>
 				<div class="content">
+          <div id="server-messages"></div>
 					<form action="/data" method="POST">
 						<textarea name="text-input"></textarea>
-						<input type="submit" />
+            <p>Max Comments:</p>
+            <input type="number" name="max-comments"></input>
+            <input type="submit" />
+            <button onclick="deleteMessages()">Delete Messages</button>
           </form>
-						<div id="server-messages"></div>
 				</div>
 			</div>
 		</div>

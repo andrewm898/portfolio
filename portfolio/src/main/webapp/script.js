@@ -103,12 +103,21 @@ async function updateQuotesFromServer() {
 
   messageList = document.getElementById('server-messages');
 
-  messageList.innerHTML = '';
+  messageList.textContent = '';
   for (let i = 0; i < messages.length; i++) {
     const liElement = document.createElement('li');
     liElement.textContent = `Message ${i + 1}: ${messages[i]}`;
     messageList.appendChild(liElement);
   }
+}
+
+/**
+ * Deletes all messages from database & clears from screen
+ */
+async function deleteMessages() {
+  const dataDelete = await fetch('/delete-data');
+  updateQuotesFromServer();
+  console.log("here");
 }
 
 /**
