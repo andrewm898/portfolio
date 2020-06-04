@@ -29,7 +29,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
-/** Servlet that returns some example content. */
+/** Servlet that deletes all entities of the 'Messages' query. */
 @WebServlet("/delete-data")
 public class DeleteCommentsServlet extends HttpServlet {
 

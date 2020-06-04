@@ -51,11 +51,9 @@ public class DataServlet extends HttpServlet {
       if (loadedResults == maxComments) {
         break;
       }
-      else {
-        String message = (String) entity.getProperty("message");
-        messages.add(message);
-        loadedResults++;
-      }
+      String message = (String) entity.getProperty("message");
+      messages.add(message);
+      loadedResults++;
     }
     Gson gson = new Gson();
     response.setContentType("application/json;");
