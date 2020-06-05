@@ -19,12 +19,12 @@ public final class Message {
 
   private final String username;
   private final String text;
-  private final long timestamp;
+  private final long timestampMillis;
 
 
-  public Message(String username, String text, long timestamp) {
+  public Message(String username, String text, long timestampMillis) {
     this.username = username; 
     this.text = text;
-    this.timestamp = timestamp;
+    this.timestampMillis = timestampMillis;
   }
 }

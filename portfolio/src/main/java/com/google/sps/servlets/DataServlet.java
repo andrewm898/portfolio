@@ -37,7 +37,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Messages").addSort("timestamp", SortDirection.DESCENDING);;
+    Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);;
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     
@@ -54,7 +54,7 @@ public class DataServlet extends HttpServlet {
       }
       Message msg = new Message((String) entity.getProperty("username"),
                                 (String) entity.getProperty("text"),
-                                (long) entity.getProperty("timestamp"));
+                                (long) entity.getProperty("timestampMillis"));
 
       messages.add(msg);
       loadedResults++;
@@ -67,7 +67,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = request.getParameter("text-input");
     String username = request.getParameter("username");
-    long timestamp = System.currentTimeMillis();
+    long timestampMillis = System.currentTimeMillis();
     String maxCommentsString = request.getParameter("max-comments");
     try {
       maxComments = Integer.parseInt(maxCommentsString);
@@ -82,7 +82,7 @@ public class DataServlet extends HttpServlet {
       Entity messageEntity = new Entity("Messages");
       messageEntity.setProperty("text", text);
       messageEntity.setProperty("username", username);
-      messageEntity.setProperty("timestamp", timestamp);
+      messageEntity.setProperty("timestampMillis", timestampMillis);
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(messageEntity);
     }
