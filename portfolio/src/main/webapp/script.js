@@ -54,7 +54,6 @@ class SlideShow {
         photosElement.appendChild(this.numtext);
     }
     handlePrev() {
-
         this.makeActiveIndex(this.slideIndex - 1);
     }
     handleNext() {
@@ -95,7 +94,7 @@ async function updateQuotesFromServer() {
   messageList.textContent = '';
   for (let i = 0; i < messages.length; i++) {
     const liElement = document.createElement('li');
-    liElement.textContent = `Message ${i + 1}: ${messages[i]}`;
+    liElement.textContent = `${messages[i].username}: ${messages[i].text}`;
     messageList.appendChild(liElement);
   }
 }

@@ -27,6 +27,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.sps.data.Message;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
@@ -36,7 +37,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Messages");
+    Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);;
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     
@@ -44,15 +45,18 @@ public class DataServlet extends HttpServlet {
       this.maxComments = 0;
     }
     //if the user enters less than 0 it returns 0 comments, more than # of comments it simply shows them all
-    ArrayList<String> messages = new ArrayList<String>();
+    ArrayList<Message> messages = new ArrayList<Message>();
     int loadedResults = 0;
 
     for (Entity entity : results.asIterable()) {
       if (loadedResults == maxComments) {
         break;
       }
-      String message = (String) entity.getProperty("message");
-      messages.add(message);
+      Message msg = new Message((String) entity.getProperty("username"),
+                                (String) entity.getProperty("text"),
+                                (long) entity.getProperty("timestampMillis"));
+
+      messages.add(msg);
       loadedResults++;
     }
     Gson gson = new Gson();
@@ -62,6 +66,8 @@ public class DataServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = request.getParameter("text-input");
+    String username = request.getParameter("username");
+    long timestampMillis = System.currentTimeMillis();
     String maxCommentsString = request.getParameter("max-comments");
     try {
       maxComments = Integer.parseInt(maxCommentsString);
@@ -69,9 +75,14 @@ public class DataServlet extends HttpServlet {
       System.err.println("Could not convert to int: " + maxCommentsString);
       maxComments = Integer.MAX_VALUE; //displays all comments if user does not enter valid number
     }
+    if ((username == null) || (username.isEmpty())) {
+      username = "Anon";
+    }
     if ((text != null) && !(text.isEmpty())) {
       Entity messageEntity = new Entity("Messages");
-      messageEntity.setProperty("message", text);
+      messageEntity.setProperty("text", text);
+      messageEntity.setProperty("username", username);
+      messageEntity.setProperty("timestampMillis", timestampMillis);
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(messageEntity);
     }
