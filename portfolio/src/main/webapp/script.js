@@ -76,37 +76,78 @@ class SlideShow {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateQuotesFromServer();
-    const container = document.getElementById('photos');
-    const slideshow = new SlideShow(document.getElementById('photos'));
-});
-
 /**
- * Fetches messages from the server to update the page with.
- */
-async function updateQuotesFromServer() {
-  const response = await fetch('/data');
-  const messages = await response.json();
+*   SlideShow is a collection of images that can be clicked through by the user.
+*/
+class Comments {
+  constructor() {
+    this.olderButton = document.createElement('button');
+    this.newerButton = document.createElement('button');
+    this.newerButton.addEventListener('click', () => this.handleNewer());
+    this.olderButton.addEventListener('click', () => this.handleOlder());
+    this.buttonContainer = document.getElementById('button-container');
 
-  messageList = document.getElementById('server-messages');
+    /* Setting up cursors */
+    this.queryCursors = ["none"]; // Arbitrary keyword for first batch of data-
+    this.cursorIndex = 0;         // this tells the servlet to start at beginning
 
-  messageList.textContent = '';
-  for (let i = 0; i < messages.length; i++) {
-    const liElement = document.createElement('li');
-    liElement.textContent = `${messages[i].username}: ${messages[i].text}`;
-    messageList.appendChild(liElement);
+    /* Creating newer button */
+    this.newerButton.textContent = "⟨ newer";
+    this.buttonContainer.appendChild(this.newerButton);
+
+    /* Creating older button */
+    this.olderButton.textContent = "older ⟩"
+    this.buttonContainer.appendChild(this.olderButton);
+  }
+  /* Handles keypress to display older comments */
+  handleOlder() {
+    this.cursorIndex++;
+    this.updateQuotesFromServer("forwards");
+    console.log("older handled");
+  }
+  /* Handles keypress to display newer comments */
+  handleNewer() {
+    if (this.cursorIndex != 0) {
+      this.cursorIndex--;
+      this.updateQuotesFromServer("backwards");
+    }
+  }
+  /**
+    * Fetches messages from the server to update the page with.
+    */
+  async updateQuotesFromServer(direction) {
+    const response = await fetch(`/data?scrs=${this.queryCursors[this.cursorIndex]}`);
+    const messages = await response.json();
+    if (direction === "forwards") {
+      //Adds cursor for next page of data to the array
+      //Will implement extra return parameter from servlet to tell client when 
+      //end of data has been reached
+      this.queryCursors[this.cursorIndex + 1] = await response.headers.get("Cursor");
+    }
+    let messageList = document.getElementById('server-messages');
+    messageList.textContent = '';
+    for (let i = 0; i < messages.length; i++) {
+      const liElement = document.createElement('p');
+      liElement.setAttribute("class", "comment");
+      liElement.textContent = `${messages[i].username}: ${messages[i].text}`;
+      messageList.appendChild(liElement);
+    }
+  }
+  /**
+    * Deletes all messages from database & clears from screen
+    */
+  async deleteMessages() {
+    const dataDelete = await fetch('/delete-data');
+    this.updateQuotesFromServer();
   }
 }
 
-/**
- * Deletes all messages from database & clears from screen
- */
-async function deleteMessages() {
-  const dataDelete = await fetch('/delete-data');
-  updateQuotesFromServer();
-  console.log("here");
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('photos');
+    const slideshow = new SlideShow(document.getElementById('photos'));
+    const comments = new Comments();
+    comments.updateQuotesFromServer("forwards"); //Automatically adds a cursor for the next page to the array
+});
 
 /**
  * Expands a collapsible when clicked.

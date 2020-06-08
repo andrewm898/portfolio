@@ -16,37 +16,54 @@
 			<div id="about">
 				<button class="collapsible" onclick="expandCollapsible('about')">About Me</button>
 				<div class="content">
-					<p>Hi! I'm Andrew Masek, a rising sophomore at Purdue University studying Computer Science.</p>
+					<p>Hi! I'm Andrew Masek, a rising sophomore at Purdue University studying Computer Science. (sytling of these sections is WIP! :) )</p>
 				</div>
 			</div>
 			<div id="work">
 				<button class="collapsible" onclick="expandCollapsible('work')">Work Experience</button>
 				<div class="content">
-					<p>--will insert more about past work experiences here.--</p>
+					<p>1. Google STEP Internship- Summer 2020</p>
+          <p>This (virtual) internship encompassed projects ranging from this portfolio to a capstone project that will be completed later this summer.</p>
+          <p>2. Instron Software Engineering Internship- Summer 2019</p>
+          <p>Working in the manufacturing department, I helped revise old code and write new code that decreased bulid times and expedited manufacturing processes.</p>
 				</div>
 			</div>
 			<div id="projects">
 				<button class="collapsible" onclick="expandCollapsible('projects')">Projects</button>
 				<div class="content">
-					<p>--will insert more about projects I have worked on here.--</p>
+					<p>Hovergames/BoilerMake- Jan 2020</p>
+          <p>Created a drone that can detect and report fires spotted on the ground. Used Python OpenCV w/ Raspberry PI on the drone, Firebase backend, and React frontend</p>
+          <p>SCANIN- Fall 2019</p>
+          <p>Purdue EPICS project- worked on backend team to create RFID based bike traffic monitoring system. Created SQL queries for data used in frontend</p>
 				</div>
 			</div>
 			<div id="contact">
 				<button class="collapsible" onclick="expandCollapsible('contact')">Contact Info</button>
 				<div class="content">
-					<p>--will insert contact info--</p>
+					<p>Email: amasek@purdue.edu</p>
+          <a href="https://www.linkedin.com/in/andrew-masek">LinkedIn</a>
 				</div>
 			</div>
 			<div id="blog">
 				<button class="collapsible" onclick="expandCollapsible('blog')">Blog</button>
 				<div class="content">
-          			<div id="server-messages"></div>
+          <div id="server-messages"></div>
+          <div id="button-container"></div>
+          <p>Add a comment!</p>
 					<form action="/data" method="POST">
-						<textarea name="text-input" maxlength="180"></textarea>
-						<input type="text" name="username"></input>
-						<p>Max Comments:</p>
-						<input type="number" name="max-comments"></input>
-						<input type="submit" />
+            <div style="width:100%; overflow: hidden;" id=name-container>
+            <!-- <div id=name-container> -->
+              <p class="form-label">Name: (optional)</p>
+              <input id="username" type="text" name="username" style="float:left; " placeholder="John Doe"></input>
+            </div>
+            <div style="overflow: hidden;" id=text-container>
+            <!-- <div id=text-container> -->
+              <p style="margin:0; float:left;">Comment: </p>
+						  <textarea name="text-input" maxlength="180" placeholder="My thoughts. . . "></textarea>
+              <input type="submit"></input>
+            </div>
+						<!-- <p>Max Comments:</p> -->
+						<!-- <input type="number" name="max-comments"></input> -->
 						<button onclick="deleteMessages()">Delete Messages</button> 
 					</form>
 				</div>
