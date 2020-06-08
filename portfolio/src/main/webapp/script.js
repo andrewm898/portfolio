@@ -103,7 +103,6 @@ class Comments {
   handleOlder() {
     this.cursorIndex++;
     this.updateQuotesFromServer("forwards");
-    console.log("older handled");
   }
   /* Handles keypress to display newer comments */
   handleNewer() {
@@ -118,19 +117,23 @@ class Comments {
   async updateQuotesFromServer(direction) {
     const response = await fetch(`/data?scrs=${this.queryCursors[this.cursorIndex]}`);
     const messages = await response.json();
-    if (direction === "forwards") {
-      //Adds cursor for next page of data to the array
-      //Will implement extra return parameter from servlet to tell client when 
-      //end of data has been reached
-      this.queryCursors[this.cursorIndex + 1] = await response.headers.get("Cursor");
+    const cursor = await response.headers.get("Cursor");
+    
+    if (!(cursor === this.queryCursors[this.cursorIndex])) { //When end of data is reached, cursor will equal the previous one
+      if (direction === "forwards") { //only adds next cursor when moving forwards
+        this.queryCursors[this.cursorIndex + 1] = cursor;
+      }
+      let messageList = document.getElementById('server-messages');
+      messageList.textContent = '';
+      for (let i = 0; i < messages.length; i++) {
+        const liElement = document.createElement('p');
+        liElement.setAttribute("class", "comment");
+        liElement.textContent = `${messages[i].username}: ${messages[i].text}`;
+        messageList.appendChild(liElement);
+      }
     }
-    let messageList = document.getElementById('server-messages');
-    messageList.textContent = '';
-    for (let i = 0; i < messages.length; i++) {
-      const liElement = document.createElement('p');
-      liElement.setAttribute("class", "comment");
-      liElement.textContent = `${messages[i].username}: ${messages[i].text}`;
-      messageList.appendChild(liElement);
+    else {
+      this.cursorIndex--; //fixes cursor index if it was moved to end of data
     }
   }
   /**
