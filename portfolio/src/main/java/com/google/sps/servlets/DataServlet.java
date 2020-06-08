@@ -41,10 +41,9 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(5);
-    //If this servlet is passed a cursor parameter, let's use it.
     String startCursor = request.getParameter("scrs");
 
-    if (!startCursor.equals("none")) {
+    if (!startCursor.equals("none")) { //if the given cursor is 'none' no cursor is necessary
       fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
     Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);
@@ -58,7 +57,6 @@ public class DataServlet extends HttpServlet {
     Cursor endCursor = results.getCursor();
     String encodedEndCursor = endCursor.toWebSafeString();
 
-    //if the user enters less than 0 it returns 0 comments, more than # of comments it simply shows them all
     ArrayList<Message> messages = new ArrayList<Message>();
 
     for (Entity entity : results) {
@@ -72,40 +70,6 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(messages));
     response.addHeader("Cursor", encodedEndCursor);
-    
-    // FetchOptions fetchOptions = FetchOptions.Builder.withLimit(5);
-
-    // // If this servlet is passed a cursor parameter, let's use it.
-    // String startCursor = req.getParameter("cursor");
-    // if (startCursor != null) {
-    //   fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
-    // }
-
-    // Query query = new Query("Messages").addSort("timestampMillis", SortDirection.ASCENDING);
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // PreparedQuery results = datastore.prepare(query);
-    
-    // if (this.maxComments < 0) {
-    //   this.maxComments = 0;
-    // }
-    // //if the user enters less than 0 it returns 0 comments, more than # of comments it simply shows them all
-    // ArrayList<Message> messages = new ArrayList<Message>();
-    // int loadedResults = 0;
-
-    // for (Entity entity : results.asIterable()) {
-    //   if (loadedResults == maxComments) {
-    //     break;
-    //   }
-    //   Message msg = new Message((String) entity.getProperty("username"),
-    //                             (String) entity.getProperty("text"),
-    //                             (long) entity.getProperty("timestampMillis"));
-
-    //   messages.add(msg);
-    //   loadedResults++;
-    // }
-    // Gson gson = new Gson();
-    // response.setContentType("application/json;");
-    // response.getWriter().println(gson.toJson(messages));
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

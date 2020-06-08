@@ -52,18 +52,14 @@
           <p>Add a comment!</p>
 					<form action="/data" method="POST">
             <div style="width:100%; overflow: hidden;" id=name-container>
-            <!-- <div id=name-container> -->
               <p class="form-label">Name: (optional)</p>
               <input id="username" type="text" name="username" style="float:left; " placeholder="John Doe"></input>
             </div>
             <div style="overflow: hidden;" id=text-container>
-            <!-- <div id=text-container> -->
               <p style="margin:0; float:left;">Comment: </p>
 						  <textarea name="text-input" maxlength="180" placeholder="My thoughts. . . "></textarea>
               <input type="submit"></input>
             </div>
-						<!-- <p>Max Comments:</p> -->
-						<!-- <input type="number" name="max-comments"></input> -->
 						<button onclick="deleteMessages()">Delete Messages</button> 
 					</form>
 				</div>
