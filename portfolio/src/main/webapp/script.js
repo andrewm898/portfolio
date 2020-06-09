@@ -91,14 +91,13 @@ class Comments {
 
     /* Setting up cursors */
     this.queryCursors = ["none"]; // Arbitrary keyword for first batch of data-
-    // this.cursorIndex = 0;         // this tells the servlet to start at beginning
 
     /* Setting up message storing/indexing */
     this.messageList = document.getElementById('server-messages');
-    this.messageArray = [];
+    this.messageArray = []; // Newer comments have smaller indexes, older comments are filled in at higher ones
     this.indexLimit = 0; // this variable holds the highest page index where the cursor following it
     // is known, so the index does not need to be taken from the server
-    this.oldestFound = false;
+    this.oldestFound = false; // oldestFound is true when an empty list of comments was found at a cursor
     this.activeIndex = 0;
 
     /* Creating newer button */
@@ -142,7 +141,7 @@ class Comments {
     const messages = await response.json();
     const cursor = await response.headers.get("Cursor");
 
-    if ((messages.length !== 0)) {
+    if (messages.length !== 0) {
       this.queryCursors[this.indexLimit + 1] = cursor;
       const messageBatch = document.createElement('div');
       messageBatch.classList.add('message-batch');
@@ -154,8 +153,7 @@ class Comments {
       }
       this.messageArray.push(messageBatch);
       this.messageList.appendChild(messageBatch);
-    }
-    else {
+    } else {
       this.oldestFound = true;
     }
   }

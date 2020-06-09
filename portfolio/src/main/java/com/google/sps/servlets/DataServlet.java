@@ -43,7 +43,7 @@ public class DataServlet extends HttpServlet {
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(5);
     String startCursor = request.getParameter("scrs");
 
-    if ((!startCursor.equals("none")) && !(startCursor == null)) { //if the given cursor is 'none' no cursor is necessary
+    if ((startCursor != null) && (!startCursor.equals("none"))) { //if the given cursor is 'none' no cursor is necessary
       fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
     Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);
