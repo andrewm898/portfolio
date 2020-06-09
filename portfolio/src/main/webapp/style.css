@@ -84,6 +84,33 @@ h2 {
   top: 7%;
 }
 
+#name-container {
+  width:100%;
+  overflow: hidden;
+}
+
+#text-container {
+  overflow: hidden;
+}
+
+#username {
+  float:left;
+}
+
+#comment-label {
+  margin:0;
+  float:left;
+}
+
+.message-batch {
+  display: none;
+  overflow: hidden;
+}
+
+.active-batch {
+  display: block;
+}
+
 .slides {
   display: none;
   border-radius: 10px;

@@ -43,16 +43,14 @@ public class DataServlet extends HttpServlet {
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(5);
     String startCursor = request.getParameter("scrs");
 
-    if (!startCursor.equals("none")) { //if the given cursor is 'none' no cursor is necessary
+    if ((!startCursor.equals("none")) && !(startCursor == null)) { //if the given cursor is 'none' no cursor is necessary
       fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
     Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery prepQuery = datastore.prepare(query);
     
-    QueryResultList<Entity> results;
-
-    results = prepQuery.asQueryResultList(fetchOptions);
+    QueryResultList<Entity> results = prepQuery.asQueryResultList(fetchOptions);
 
     Cursor endCursor = results.getCursor();
     String encodedEndCursor = endCursor.toWebSafeString();

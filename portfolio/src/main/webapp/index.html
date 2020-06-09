@@ -51,16 +51,15 @@
           <div id="button-container"></div>
           <p>Add a comment!</p>
 					<form action="/data" method="POST">
-            <div style="width:100%; overflow: hidden;" id=name-container>
+            <div id=name-container>
               <p class="form-label">Name: (optional)</p>
-              <input id="username" type="text" name="username" style="float:left; " placeholder="John Doe"></input>
+              <input id="username" type="text" name="username" placeholder="John Doe"></input>
             </div>
-            <div style="overflow: hidden;" id=text-container>
-              <p style="margin:0; float:left;">Comment: </p>
+            <div id=text-container>
+              <p id="comment-label">Comment: </p>
 						  <textarea name="text-input" maxlength="180" placeholder="My thoughts. . . "></textarea>
               <input type="submit"></input>
             </div>
-						<button onclick="deleteMessages()">Delete Messages</button> 
 					</form>
 				</div>
 			</div>
