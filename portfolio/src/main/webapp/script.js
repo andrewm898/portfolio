@@ -180,6 +180,7 @@ class Comments {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const visit = fetch("/visits", {method: 'POST'}); //records that site was visited
   const container = document.getElementById('photos');
   const slideshow = new SlideShow(document.getElementById('photos'));
   const comments = new Comments();
