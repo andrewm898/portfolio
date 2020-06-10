@@ -36,6 +36,31 @@ h2 {
   float: left;
 }
 
+.comment {
+  padding: 5px;
+  margin: 4px;
+  background-color: #FFDE9F;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  /* font-size: 40px; */
+}
+
+.form-label {
+  float: left;
+  padding: 0;
+  margin: 0;
+}
+
+#server-messages {
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border-radius: 10px;
+
+}
+
 #info {
   padding-left: 20px;
   padding-right: 20px;
@@ -57,6 +82,33 @@ h2 {
   padding: 20px 30px;
   position: absolute;
   top: 7%;
+}
+
+#name-container {
+  width:100%;
+  overflow: hidden;
+}
+
+#text-container {
+  overflow: hidden;
+}
+
+#username {
+  float:left;
+}
+
+#comment-label {
+  margin:0;
+  float:left;
+}
+
+.message-batch {
+  display: none;
+  overflow: hidden;
+}
+
+.active-batch {
+  display: block;
 }
 
 .slides {
@@ -104,7 +156,7 @@ h2 {
 
 .content {
   padding: 0 18px;
-  background-color: rgba(255, 188, 120, 0.76);
+  background-color: rgba(255, 188, 120, 0.863);
   border-radius: 10px;
   max-height: 0;
   overflow: hidden;

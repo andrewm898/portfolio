@@ -27,6 +27,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.QueryResultList;
+import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Message;
 
 /** Servlet that returns some example content. */
@@ -37,31 +40,34 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);;
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-    
-    if (this.maxComments < 0) {
-      this.maxComments = 0;
-    }
-    //if the user enters less than 0 it returns 0 comments, more than # of comments it simply shows them all
-    ArrayList<Message> messages = new ArrayList<Message>();
-    int loadedResults = 0;
+    FetchOptions fetchOptions = FetchOptions.Builder.withLimit(5);
+    String startCursor = request.getParameter("scrs");
 
-    for (Entity entity : results.asIterable()) {
-      if (loadedResults == maxComments) {
-        break;
-      }
+    if ((startCursor != null) && (!startCursor.equals("none"))) { //if the given cursor is 'none' no cursor is necessary
+      fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
+    }
+    Query query = new Query("Messages").addSort("timestampMillis", SortDirection.DESCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery prepQuery = datastore.prepare(query);
+    
+    QueryResultList<Entity> results = prepQuery.asQueryResultList(fetchOptions);
+
+    Cursor endCursor = results.getCursor();
+    String encodedEndCursor = endCursor.toWebSafeString();
+
+    ArrayList<Message> messages = new ArrayList<Message>();
+
+    for (Entity entity : results) {
       Message msg = new Message((String) entity.getProperty("username"),
                                 (String) entity.getProperty("text"),
                                 (long) entity.getProperty("timestampMillis"));
-
       messages.add(msg);
-      loadedResults++;
     }
+
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(messages));
+    response.addHeader("Cursor", encodedEndCursor);
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
