@@ -70,7 +70,7 @@ async function drawChart() {
     }
     else {
       /* if datastoreVisits[i].dayName is not the right name for its index,
-       * the day at that index is missing from the datastore, so it is created */
+       * the day at that index is missing from the datastore, so it is created. */
       const newVisitObject = {
         dayName : indexedDayNames[i],
         visitCount : 0
