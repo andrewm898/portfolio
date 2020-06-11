@@ -69,10 +69,10 @@ public class SiteVisits extends HttpServlet {
     LocalDate date = LocalDate.now();
     DayOfWeek dayObject = date.getDayOfWeek();
     /* dayObject string is stored in all caps, this creates string with only first letter capitalized */
-    String day = dayObject.toString().substring(0, 1).toUpperCase() + dayObject.toString().substring(1).toLowerCase();
+    String day = dayObject.toString().substring(0, 1) + dayObject.toString().substring(1).toLowerCase();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Filter propertyFilter = new FilterPredicate("day", FilterOperator.EQUAL, day.toString());
+    Filter propertyFilter = new FilterPredicate("day", FilterOperator.EQUAL, day;
     Query query = new Query("Weekdays").setFilter(propertyFilter);
     PreparedQuery prepQuery = datastore.prepare(query);
     
