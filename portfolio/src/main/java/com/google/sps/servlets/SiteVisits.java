@@ -29,8 +29,8 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.time.LocalDate;  
 import java.time.DayOfWeek;
 import com.google.gson.Gson;
@@ -50,11 +50,39 @@ public class SiteVisits extends HttpServlet {
 
     ArrayList<Weekday> dailyVisits = new ArrayList<Weekday>();
 
+    /* Datastore entities are stored with indices, this maps day names to each index */
+    HashMap<Integer, String> indexToWeekday = new HashMap<Integer, String>();
+    indexToWeekday.put(0, "Sunday");
+    indexToWeekday.put(1, "Monday");
+    indexToWeekday.put(2, "Tuesday");
+    indexToWeekday.put(3, "Wednesday");
+    indexToWeekday.put(4, "Thursday");
+    indexToWeekday.put(5, "Friday");
+    indexToWeekday.put(6, "Saturday");
+
+    int expectedIndex = 0;
     for (Entity entity : prepQuery.asIterable()) {
-      /* fills arraylist with all existing weekday objects */
-      Weekday weekday = new Weekday((String) entity.getProperty("day"),
-                                    Integer.parseInt(entity.getProperty("visits").toString()));
-      dailyVisits.add(weekday);
+      while (Integer.parseInt(entity.getProperty("index").toString()) != expectedIndex) {
+        /* Weekday w/ no visits assigned for missing array indices */
+        Weekday fillerDay = new Weekday(indexToWeekday.get(expectedIndex), 0);
+        dailyVisits.add(fillerDay);
+        expectedIndex++;
+      }
+
+      /* fills arraylist with weekday object made from entity */
+      Weekday knownWeekday = new Weekday((String) entity.getProperty("day"),
+                              Integer.parseInt(entity.getProperty("visits").toString()));
+      dailyVisits.add(knownWeekday);
+      expectedIndex++;
+    }
+    
+    /* Fills in rest of dailyVisits if last entity was not last day of week */
+    if (dailyVisits.size() != 7) {
+      while (expectedIndex < 7) {
+        Weekday fillerDay = new Weekday(indexToWeekday.get(expectedIndex), 0);
+        dailyVisits.add(fillerDay);
+        expectedIndex++;
+      }
     }
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -72,7 +100,7 @@ public class SiteVisits extends HttpServlet {
     String day = dayObject.toString().substring(0, 1) + dayObject.toString().substring(1).toLowerCase();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Filter propertyFilter = new FilterPredicate("day", FilterOperator.EQUAL, day;
+    Filter propertyFilter = new FilterPredicate("day", FilterOperator.EQUAL, day);
     Query query = new Query("Weekdays").setFilter(propertyFilter);
     PreparedQuery prepQuery = datastore.prepare(query);
     
