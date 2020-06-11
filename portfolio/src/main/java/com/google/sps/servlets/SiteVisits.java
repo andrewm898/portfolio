@@ -70,8 +70,9 @@ public class SiteVisits extends HttpServlet {
       }
 
       /* fills arraylist with weekday object made from entity */
-      Weekday knownWeekday = new Weekday((String) entity.getProperty("day"),
-                              Integer.parseInt(entity.getProperty("visits").toString()));
+      Weekday knownWeekday = new Weekday(indexToWeekday.get(Integer.parseInt
+                                        (entity.getProperty("index").toString())),
+                                        Integer.parseInt(entity.getProperty("visits").toString()));
       dailyVisits.add(knownWeekday);
       expectedIndex++;
     }
@@ -99,8 +100,19 @@ public class SiteVisits extends HttpServlet {
     /* dayObject string is stored in all caps, this creates string with only first letter capitalized */
     String day = dayObject.toString().substring(0, 1) + dayObject.toString().substring(1).toLowerCase();
 
+    /* Sets up indexes to use for each day of the week */
+      HashMap<String, Integer> weekdays = new HashMap<String, Integer>();
+      weekdays.put("Sunday", 0);
+      weekdays.put("Monday", 1);
+      weekdays.put("Tuesday", 2);
+      weekdays.put("Wednesday", 3);
+      weekdays.put("Thursday", 4);
+      weekdays.put("Friday", 5);
+      weekdays.put("Saturday", 6);
+
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Filter propertyFilter = new FilterPredicate("day", FilterOperator.EQUAL, day);
+    Filter propertyFilter = new FilterPredicate("index", FilterOperator.EQUAL, weekdays.get(day));
     Query query = new Query("Weekdays").setFilter(propertyFilter);
     PreparedQuery prepQuery = datastore.prepare(query);
     
@@ -111,8 +123,7 @@ public class SiteVisits extends HttpServlet {
     Entity currentDay = new Entity("Weekdays");
     for (Entity entity : prepQuery.asIterable()) {
       int totalViews = 0;
-      if ((entity.getProperty("visits") != null) &&
-         (entity.getProperty("day").equals(day))) { //ensures 'entity' is correct one
+      if ((entity.getProperty("visits") != null)) { //ensures 'entity' is correct one
         totalViews = Integer.parseInt(entity.getProperty("visits").toString());
         currentDay = entity;
         currentDay.setProperty("visits", totalViews + 1);
@@ -122,25 +133,11 @@ public class SiteVisits extends HttpServlet {
     }
 
     if (!entityFound) {
-      /* If the datastore does not have an entity matching today's 'day' string (meaning the site hasn't
-       * been visited on the current day of the week), it gets created here */
-
-      /* Sets up indexes to use for each day of the week */
-      HashMap<String, Integer> weekdays = new HashMap<String, Integer>();
-      weekdays.put("Sunday", 0);
-      weekdays.put("Monday", 1);
-      weekdays.put("Tuesday", 2);
-      weekdays.put("Wednesday", 3);
-      weekdays.put("Thursday", 4);
-      weekdays.put("Friday", 5);
-      weekdays.put("Saturday", 6);
-
       Integer index = weekdays.get(day);
 
       /* Assigns all relevant fields to currentDay entity */
       currentDay.setProperty("visits", 1);
       currentDay.setProperty("index", index);
-      currentDay.setProperty("day", day);
     }
     datastore.put(currentDay);
   }
