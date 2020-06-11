@@ -36,7 +36,7 @@ import java.time.DayOfWeek;
 import com.google.gson.Gson;
 import com.google.sps.data.Weekday;
 
-/** Servlet that returns some example content. */
+/** Servlet that handles updating and requesting site viewcount data. */
 @WebServlet("/visits")
 public class SiteVisits extends HttpServlet {
 
