@@ -14,7 +14,7 @@
 
 package com.google.sps.data;
 
-/** A message from a specific user. */
+/** A day of the week, Sunday-Saturday. */
 public final class Weekday {
   
   private final String dayName;
