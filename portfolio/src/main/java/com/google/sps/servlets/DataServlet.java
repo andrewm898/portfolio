@@ -31,6 +31,9 @@ import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.sps.data.Message;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
@@ -42,6 +45,11 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(5);
     String startCursor = request.getParameter("scrs");
+
+    String languageCode = "en"; /* Sets default language code as english */
+    if (request.getParameter("lan") != null) {
+      languageCode = request.getParameter("lan");
+    }
 
     if ((startCursor != null) && (!startCursor.equals("none"))) { //if the given cursor is 'none' no cursor is necessary
       fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
@@ -57,9 +65,14 @@ public class DataServlet extends HttpServlet {
 
     ArrayList<Message> messages = new ArrayList<Message>();
 
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+
     for (Entity entity : results) {
+      Translation translation = translate.translate((String) entity.getProperty("text"),
+                                                  Translate.TranslateOption.targetLanguage(languageCode));
+      String translatedText = translation.getTranslatedText();
       Message msg = new Message((String) entity.getProperty("username"),
-                                (String) entity.getProperty("text"),
+                                translatedText,
                                 (long) entity.getProperty("timestampMillis"));
       messages.add(msg);
     }
