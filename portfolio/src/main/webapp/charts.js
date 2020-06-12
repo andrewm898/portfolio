@@ -11,31 +11,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(drawChart);
-
-
-/** Creates a chart and adds it to the page. */
-function drawChart() {
+ 
+/**
+ * Creates a chart and adds it to the page.
+ */
+async function drawChart() {
+  const response = await fetch('/visits', {method: 'GET'});
+  const visitArray = await response.json();
+  
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Weekday');
   data.addColumn('number', 'Visits');
-        data.addRows([
-          ['Monday', 10],
-          ['Tuesday', 5],
-          ['Wednesday', 11],
-          ['Thursday', 12],
-          ['Friday', 13]
-        ]);
-
+ 
+  for (let i = 0; i < visitArray.length; i++) {
+    data.addRow([visitArray[i].dayName.toString(), visitArray[i].visitCount]);
+  }
+ 
   const options = {
-    'title': 'Site Visits',
-    'width':500,
-    'height':400
+    title: "Site visits",
+    width: 1000,
+    height: 900,
   };
-
+ 
   const chart = new google.charts.Bar(
       document.getElementById('chart-container'));
   chart.draw(data, options);
 }
+ 
