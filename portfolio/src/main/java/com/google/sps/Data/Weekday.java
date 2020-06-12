@@ -18,9 +18,9 @@ package com.google.sps.data;
 public final class Weekday {
   
   private final String dayName;
-  private final Integer visitCount;
+  private final long visitCount;
 
-  public Weekday(String dayName, Integer visitCount) {
+  public Weekday(String dayName, long visitCount) {
     this.dayName = dayName;
     this.visitCount = visitCount;
   }

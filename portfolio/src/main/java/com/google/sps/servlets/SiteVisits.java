@@ -44,46 +44,34 @@ public class SiteVisits extends HttpServlet {
    * Gets all weekday entries from datastore and sends back as Json objects
    */
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Weekdays").addSort("index", SortDirection.ASCENDING);
+    Query query = new Query("Weekdays").addSort("index", SortDirection.ASCENDING);;
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery prepQuery = datastore.prepare(query);
 
     ArrayList<Weekday> dailyVisits = new ArrayList<Weekday>();
 
     /* Datastore entities are stored with indices, this maps day names to each index */
-    HashMap<Integer, String> indexToWeekday = new HashMap<Integer, String>();
-    indexToWeekday.put(0, "Sunday");
-    indexToWeekday.put(1, "Monday");
-    indexToWeekday.put(2, "Tuesday");
-    indexToWeekday.put(3, "Wednesday");
-    indexToWeekday.put(4, "Thursday");
-    indexToWeekday.put(5, "Friday");
-    indexToWeekday.put(6, "Saturday");
-
-    int expectedIndex = 0;
-    for (Entity entity : prepQuery.asIterable()) {
-      while (Integer.parseInt(entity.getProperty("index").toString()) != expectedIndex) {
-        /* Weekday w/ no visits assigned for missing array indices */
-        Weekday fillerDay = new Weekday(indexToWeekday.get(expectedIndex), 0);
-        dailyVisits.add(fillerDay);
-        expectedIndex++;
-      }
-
-      /* fills arraylist with weekday object made from entity */
-      Weekday knownWeekday = new Weekday(indexToWeekday.get(Integer.parseInt
-                                        (entity.getProperty("index").toString())),
-                                        Integer.parseInt(entity.getProperty("visits").toString()));
-      dailyVisits.add(knownWeekday);
-      expectedIndex++;
-    }
+    HashMap<Long, String> indexToWeekday = new HashMap<Long, String>();
     
-    /* Fills in rest of dailyVisits if last entity was not last day of week */
-    if (dailyVisits.size() != 7) {
-      while (expectedIndex < 7) {
-        Weekday fillerDay = new Weekday(indexToWeekday.get(expectedIndex), 0);
-        dailyVisits.add(fillerDay);
-        expectedIndex++;
+    indexToWeekday.put(new Long(0), "Monday");
+    indexToWeekday.put(new Long(1), "Tuesday");
+    indexToWeekday.put(new Long(2), "Wednesday");
+    indexToWeekday.put(new Long(3), "Thursday");
+    indexToWeekday.put(new Long(4), "Friday");
+    indexToWeekday.put(new Long(5), "Saturday");
+    indexToWeekday.put(new Long(6), "Sunday");
+
+    HashMap<Long, Long> dayOfWeekToCount = new HashMap<Long, Long>();
+    for (Entity entity : prepQuery.asIterable()) {
+      if ((entity == null) || (entity.getProperty("index") == null)) {
+      } else {
+        long day = (long) entity.getProperty("index");
+        long count = (long) entity.getProperty("visits");
+        dayOfWeekToCount.put(day, count);
       }
+    }
+    for (long i = 0; i < 7; i++) {
+      dailyVisits.add(new Weekday(indexToWeekday.get(i), dayOfWeekToCount.getOrDefault(i, new Long(0))));
     }
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -97,34 +85,20 @@ public class SiteVisits extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     LocalDate date = LocalDate.now();
     DayOfWeek dayObject = date.getDayOfWeek();
-    /* dayObject string is stored in all caps, this creates string with only first letter capitalized */
-    String day = dayObject.toString().substring(0, 1) + dayObject.toString().substring(1).toLowerCase();
-
-    /* Sets up indexes to use for each day of the week */
-      HashMap<String, Integer> weekdays = new HashMap<String, Integer>();
-      weekdays.put("Sunday", 0);
-      weekdays.put("Monday", 1);
-      weekdays.put("Tuesday", 2);
-      weekdays.put("Wednesday", 3);
-      weekdays.put("Thursday", 4);
-      weekdays.put("Friday", 5);
-      weekdays.put("Saturday", 6);
-
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Filter propertyFilter = new FilterPredicate("index", FilterOperator.EQUAL, weekdays.get(day));
+    Filter propertyFilter = new FilterPredicate("index", FilterOperator.EQUAL, dayObject.getValue() - 1);
     Query query = new Query("Weekdays").setFilter(propertyFilter);
     PreparedQuery prepQuery = datastore.prepare(query);
     
-    /* Entities of kind 'Weekdays' have 3 properties; a day (string for a day of the week), integer # of visits, 
-     * and an index (Sunday is 0, Monday is 1, etc.) */
-
+    /* Entities of kind 'Weekdays' have 2 properties; an integer # of visits, 
+     * and an index (Monday is 0, etc.) */
     boolean entityFound = false;
     Entity currentDay = new Entity("Weekdays");
     for (Entity entity : prepQuery.asIterable()) {
-      int totalViews = 0;
+      long totalViews = 0;
       if ((entity.getProperty("visits") != null)) { //ensures 'entity' is correct one
-        totalViews = Integer.parseInt(entity.getProperty("visits").toString());
+        totalViews = (long) entity.getProperty("visits");
         currentDay = entity;
         currentDay.setProperty("visits", totalViews + 1);
         entityFound = true;
@@ -133,8 +107,7 @@ public class SiteVisits extends HttpServlet {
     }
 
     if (!entityFound) {
-      Integer index = weekdays.get(day);
-
+      int index = dayObject.getValue() - 1;
       /* Assigns all relevant fields to currentDay entity */
       currentDay.setProperty("visits", 1);
       currentDay.setProperty("index", index);
