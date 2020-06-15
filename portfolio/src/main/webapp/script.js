@@ -131,7 +131,7 @@ class Comments {
     /* If the language has been changed, comments are reloaded in it */
     if (expectedLanguageId !== this.currentLanguage) {
       /* These values are cleared so comments are reloaded in different language */
-      this.messageList.textContent = '';
+      this.messageList.innerHTML = '';
       this.messageArray = [];
       this.indexLimit = 0;
       this.oldestFound = false;
