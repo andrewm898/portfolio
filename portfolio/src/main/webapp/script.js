@@ -81,6 +81,7 @@ class SlideShow {
 */
 class Comments {
   constructor() {
+    /* Setting up older/newer buttons */
     this.olderButton = document.createElement('button');
     this.newerButton = document.createElement('button');
     this.deleteButton = document.createElement('button');
@@ -88,6 +89,16 @@ class Comments {
     this.olderButton.addEventListener('click', () => this.handleOlder());
     this.deleteButton.addEventListener('click', () => this.deleteMessages());
     this.buttonContainer = document.getElementById('button-container');
+
+    /* Creating language selection options */
+    this.currentLanguage = 'el'; /* default language is english, will add more in future */
+    for (const languageInfo of [{"code":"en", "name":"English"},
+                                {"code":"es", "name":"Spanish"},]) {
+      const language = document.createElement('button');
+      language.textContent = languageInfo.name;
+      language.addEventListener('click', () => this.handleLanguage(languageInfo.code));
+      document.getElementById('language-options').appendChild(language);
+    }
 
     /* Setting up cursors */
     this.queryCursors = ["none"]; // Arbitrary keyword for first batch of data-
@@ -113,6 +124,22 @@ class Comments {
     this.buttonContainer.appendChild(this.deleteButton);
   }
 
+  /**
+    * Handles a new language being selected
+    */
+  async handleLanguage(expectedLanguageId) {
+    /* If the language has been changed, comments are reloaded in it */
+    if (expectedLanguageId !== this.currentLanguage) {
+      /* These values are cleared so comments are reloaded in different language */
+      this.messageList.innerHTML = '';
+      this.messageArray = [];
+      this.indexLimit = 0;
+      this.oldestFound = false;
+      this.activeIndex = 0;
+      this.currentLanguage = expectedLanguageId;
+      this.render();
+    }
+  }
   /* Handles keypress to display older comments */
   async handleOlder() {
     if (!this.oldestFound) {
@@ -134,10 +161,10 @@ class Comments {
     }
   }
   /*
-   * Fetches messages from the server to store in message array.
+   * Fetches messages from the server to store in message array using current language.
    */
   async getServerMessages() {
-    const response = await fetch(`/data?scrs=${this.queryCursors[this.indexLimit]}`);
+    const response = await fetch(`/data?scrs=${this.queryCursors[this.indexLimit]}&lan=${this.currentLanguage}`);
     const messages = await response.json();
     const cursor = await response.headers.get("Cursor");
 

@@ -162,3 +162,8 @@ h2 {
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
+
+#language-collapsible {
+  cursor: pointer;
+  background-color: rgba(212, 210, 207, 0.863);
+}
