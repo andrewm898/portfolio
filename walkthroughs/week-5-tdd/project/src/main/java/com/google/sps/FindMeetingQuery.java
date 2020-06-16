@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Comparator;
 
+/* Returns a collection of TimeRange objects that the MeetingRequest can be scheduled in */
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
 
@@ -73,25 +74,25 @@ public final class FindMeetingQuery {
 
     int startTime = TimeRange.START_OF_DAY;
     int endTime = 0;
-    Collection<TimeRange> validRanges = new ArrayList<TimeRange>();
+    Collection<TimeRange> availableMeetingTimes = new ArrayList<TimeRange>();
 
     /* Checks each open time slot prior to a busy time in the non-overlapping calendar, adds if long enough */
     for (int i = 0; i < mergedBusyTimes.size(); i++) {
       endTime = mergedBusyTimes.get(i).start();
       TimeRange newRange = TimeRange.fromStartEnd(startTime, endTime, false);
       if (newRange.duration() >= request.getDuration()) {
-        validRanges.add(newRange);
+        availableMeetingTimes.add(newRange);
       }
       /* New start time is moved up to the end of this current time slot */
       startTime = mergedBusyTimes.get(i).end();
     }
-    
+
     /* Loop exits w/ startTime as the latest end time, this checks if there is free time after that*/
     if ((startTime < TimeRange.END_OF_DAY) && ((TimeRange.END_OF_DAY - startTime) >= request.getDuration())) {
       endTime = TimeRange.END_OF_DAY;
       TimeRange newRange = TimeRange.fromStartEnd(startTime, endTime, true);
-      validRanges.add(newRange);
+      availableMeetingTimes.add(newRange);
     }
-    return validRanges;
+    return availableMeetingTimes;
   }
 }
