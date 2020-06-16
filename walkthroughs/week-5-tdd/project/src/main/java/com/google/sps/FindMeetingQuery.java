@@ -74,26 +74,33 @@ public final class FindMeetingQuery {
       }
     }
 
-    int startTime = TimeRange.START_OF_DAY;
-    int endTime = 0;
     Collection<TimeRange> availableMeetingTimes = new ArrayList<TimeRange>();
+
+    availableMeetingTimes = processAvailableTimes(mergedBusyTimes, request.getDuration());
+
+    return availableMeetingTimes;
+  }
+
+  public Collection<TimeRange> processAvailableTimes(List<TimeRange> mergedBusyTimes, long minDuration) {
+    Collection<TimeRange> availableMeetingTimes = new ArrayList<TimeRange>();
+    int availableTimeStart = TimeRange.START_OF_DAY;
+    int availableTimeEnd = 0;
+
+    /* Ensures there is a placeholder at the end of the list, +1 is to correctly assign end of day field */
+    if (mergedBusyTimes.get(mergedBusyTimes.size() - 1).end() != TimeRange.END_OF_DAY) {
+      TimeRange endHolder = TimeRange.fromStartEnd(TimeRange.END_OF_DAY + 1, TimeRange.END_OF_DAY + 1, false);
+      mergedBusyTimes.add(endHolder);
+    }
 
     /* Checks each open time slot prior to a busy time in the non-overlapping calendar, adds if long enough */
     for (int i = 0; i < mergedBusyTimes.size(); i++) {
-      endTime = mergedBusyTimes.get(i).start();
-      TimeRange newRange = TimeRange.fromStartEnd(startTime, endTime, false);
-      if (newRange.duration() >= request.getDuration()) {
+      availableTimeEnd = mergedBusyTimes.get(i).start();
+      TimeRange newRange = TimeRange.fromStartEnd(availableTimeStart, availableTimeEnd, false);
+      if (newRange.duration() >= minDuration) {
         availableMeetingTimes.add(newRange);
       }
       /* New start time is moved up to the end of this current time slot */
-      startTime = mergedBusyTimes.get(i).end();
-    }
-
-    /* Loop exits w/ startTime as the latest end time, this checks if there is free time after that*/
-    if ((startTime < TimeRange.END_OF_DAY) && ((TimeRange.END_OF_DAY - startTime) >= request.getDuration())) {
-      endTime = TimeRange.END_OF_DAY;
-      TimeRange newRange = TimeRange.fromStartEnd(startTime, endTime, true);
-      availableMeetingTimes.add(newRange);
+      availableTimeStart = mergedBusyTimes.get(i).end();
     }
     return availableMeetingTimes;
   }
