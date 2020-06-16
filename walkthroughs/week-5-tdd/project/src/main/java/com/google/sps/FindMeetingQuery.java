@@ -58,8 +58,8 @@ public final class FindMeetingQuery {
     for (int i = 0; i < busyTimes.size(); i++) {
       /* If the next timerange overlaps with current one, create a composite of the two */
       if ((i < (busyTimes.size() - 1)) && (busyTimes.get(i).overlaps(busyTimes.get(i + 1)))) {
-
-        int newStart = busyTimes.get(i).start(); // earlier range will have earlier start time
+        /* newStart is the earlier start time, newEnd is the later end time */
+        int newStart = busyTimes.get(i).start();
         int newEnd = (busyTimes.get(i).end() >= busyTimes.get(i + 1).end()) ? busyTimes.get(i).end() : busyTimes.get(i + 1).end();
         
         TimeRange mergedRange = TimeRange.fromStartEnd(newStart, newEnd, false);
