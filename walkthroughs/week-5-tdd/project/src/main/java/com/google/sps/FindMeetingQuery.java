@@ -57,16 +57,18 @@ public final class FindMeetingQuery {
 
     /* Merging all overlapping busy times */
     for (int i = 0; i < busyTimes.size(); i++) {
-      /* If the next timerange overlaps with current one, create a composite of the two */
-      if ((i < (busyTimes.size() - 1)) && (busyTimes.get(i).overlaps(busyTimes.get(i + 1)))) {
-        /* newStart is the earlier start time, newEnd is the later end time */
-        int newStart = busyTimes.get(i).start();
-        int newEnd = (busyTimes.get(i).end() >= busyTimes.get(i + 1).end()) ? busyTimes.get(i).end() : busyTimes.get(i + 1).end();
+      /* If the current timerange overlaps with a merged one, replace with a combo of both*/
+      if ((!mergedBusyTimes.isEmpty()) && (busyTimes.get(i).overlaps(mergedBusyTimes.get(mergedBusyTimes.size() - 1)))) {
+        int lastMergedIndex = mergedBusyTimes.size() - 1;
+
+        /* newStart is earliest start, which will be the merged timerange, newEnd is latest end */
+        int newStart = mergedBusyTimes.get(mergedBusyTimes.size() - 1).start();
+        int newEnd = (busyTimes.get(i).end() >= mergedBusyTimes.get(lastMergedIndex).end()) ?
+                      busyTimes.get(i).end() : mergedBusyTimes.get(lastMergedIndex).end();
         
         TimeRange mergedRange = TimeRange.fromStartEnd(newStart, newEnd, false);
-        busyTimes.set(i + 1, mergedRange); // This position is replaced in the array so it is not added twice
-        mergedBusyTimes.add(mergedRange);
-      } else if (!mergedBusyTimes.contains(busyTimes.get(i))) {
+        mergedBusyTimes.set(lastMergedIndex, mergedRange);
+      } else {
         /* If there is no overlap & the ith index wasn't previously added, add it now */
         mergedBusyTimes.add(busyTimes.get(i));
       }
