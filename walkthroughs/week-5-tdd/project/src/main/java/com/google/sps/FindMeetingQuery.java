@@ -32,6 +32,13 @@ public final class FindMeetingQuery {
       return emptyCollection;
     }
 
+    /* This function searches through each of the passed in events to check if
+     * they contain a person who needs to be in the meetingrequest, and if so adds
+     * that event's time range to a list of busy times. The time ranges in that list
+     * are then merged if they are overlapping each other so it is a linear sequence 
+     * of time ranges. Then, the function processAvailableTimes returns a list
+     * of all free time ranges that are long enough for the meeting's duration */
+
     List<TimeRange> busyTimes = new ArrayList<TimeRange>();
 
     /* Finding all timeranges of existing events that attendees are going to */
@@ -50,6 +57,8 @@ public final class FindMeetingQuery {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
+    /* ORDER_BY_START reorders the busyTimes list strictly by their start time, regardless
+     * of their end time. This enables the following merge algorithm to work properly */
     Collections.sort(busyTimes, TimeRange.ORDER_BY_START);
 
     /* A list of non overlapping time ranges made by merging all overlapping original ranges */
@@ -60,11 +69,11 @@ public final class FindMeetingQuery {
       /* If the current timerange overlaps with a merged one, replace with a combo of both*/
       if ((!mergedBusyTimes.isEmpty()) && (busyTimes.get(i).overlaps(mergedBusyTimes.get(mergedBusyTimes.size() - 1)))) {
         int lastMergedIndex = mergedBusyTimes.size() - 1;
-
+        TimeRange lastMergedRange = mergedBusyTimes.get(lastMergedIndex);
+        
         /* newStart is earliest start, which will be the merged timerange, newEnd is latest end */
-        int newStart = mergedBusyTimes.get(mergedBusyTimes.size() - 1).start();
-        int newEnd = (busyTimes.get(i).end() >= mergedBusyTimes.get(lastMergedIndex).end()) ?
-                      busyTimes.get(i).end() : mergedBusyTimes.get(lastMergedIndex).end();
+        int newStart = lastMergedRange.start();
+        int newEnd = Math.max(busyTimes.get(i).end(), lastMergedRange.end());
         
         TimeRange mergedRange = TimeRange.fromStartEnd(newStart, newEnd, false);
         mergedBusyTimes.set(lastMergedIndex, mergedRange);
