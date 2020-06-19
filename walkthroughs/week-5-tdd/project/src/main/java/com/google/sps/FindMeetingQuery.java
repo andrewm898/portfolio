@@ -47,29 +47,9 @@ public final class FindMeetingQuery {
       }
     }
 
-    /* First tries to find times that allow mandatory AND optional attendees to attend.
-     * If found, only those times are returned. If not, then all of the times that
-     * work for only the mandatory people are returned */
+    Collection<TimeRange> availableCombinedTimes = findCrossoverTimes(mandatoryBusyTimes, optionalBusyTimes, request.getDuration());
 
-    List<TimeRange> combinedBusyTimes = new ArrayList<TimeRange>(mandatoryBusyTimes);
-    combinedBusyTimes.addAll(optionalBusyTimes);
-
-    /* If none of the attendees are busy at any time, return the whole day */
-    if (combinedBusyTimes.isEmpty()) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
-    }
-
-    /* ORDER_BY_START reorders the given list strictly by the TimeRange's start time, regardless
-     * of end time. This enables the following merge algorithm to work properly */
-    Collections.sort(combinedBusyTimes, TimeRange.ORDER_BY_START);
-
-    /* Merges all overlaps in the combined mandatory & optional busy times */
-    List<TimeRange> mergedCombinedBusyTimes = mergeOverlappingRanges(combinedBusyTimes);
-
-    /* Checks if there are time ranges that work for both mandatory & optional attendees, if there are, return them */
-    Collection<TimeRange> availableCombinedTimes = new ArrayList<TimeRange>();
-    availableCombinedTimes = processAvailableTimes(mergedCombinedBusyTimes, request.getDuration());
-
+    /* If crossover times exist, return them. If not, just find times that work for mandatory attendees */
     if (!availableCombinedTimes.isEmpty()) {
       return availableCombinedTimes;
     }
@@ -78,7 +58,7 @@ public final class FindMeetingQuery {
 
     /* If none of the mandatory attendees are busy at any time, return the whole day */
     if (mandatoryBusyTimes.isEmpty()) {
-      if (mandatoryBusyTimes.isEmpty()) {
+      if (request.getAttendees().isEmpty()) {
         Collection<TimeRange> emptyCollection = Arrays.asList();
         return emptyCollection;
       }
@@ -97,6 +77,31 @@ public final class FindMeetingQuery {
     return availableMandatoryTimes;
   }
   
+  /* Tries to find times that allow mandatory AND optional attendees to attend.
+   * If found, only those times are returned.*/
+  public Collection<TimeRange> findCrossoverTimes(List<TimeRange> mandatoryBusyTimes, List<TimeRange> optionalBusyTimes, long duration) {
+    List<TimeRange> combinedBusyTimes = new ArrayList<TimeRange>(mandatoryBusyTimes);
+    combinedBusyTimes.addAll(optionalBusyTimes);
+
+    /* If none of the attendees are busy at any time, return the whole day */
+    if (combinedBusyTimes.isEmpty()) {
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    }
+
+    /* ORDER_BY_START reorders the given list strictly by the TimeRange's start time, regardless
+     * of end time. This enables the following merge algorithm to work properly */
+    Collections.sort(combinedBusyTimes, TimeRange.ORDER_BY_START);
+
+    /* Merges all overlaps in the combined mandatory & optional busy times */
+    List<TimeRange> mergedCombinedBusyTimes = mergeOverlappingRanges(combinedBusyTimes);
+
+    /* Checks if there are time ranges that work for both mandatory & optional attendees and returns */
+    Collection<TimeRange> availableCombinedTimes = new ArrayList<TimeRange>();
+    availableCombinedTimes = processAvailableTimes(mergedCombinedBusyTimes, duration);
+
+    return availableCombinedTimes;
+  }
+
   public List<TimeRange> mergeOverlappingRanges(List<TimeRange> busyTimes) {
     /* A list of non overlapping time ranges made by merging all overlapping original ranges */
     List<TimeRange> mergedBusyTimes = new ArrayList<TimeRange>();
