@@ -36,17 +36,14 @@ public final class FindMeetingQuery {
     List<TimeRange> mandatoryBusyTimes = new ArrayList<TimeRange>();
     List<TimeRange> optionalBusyTimes = new ArrayList<TimeRange>();
     for (Event event : events) {
-      Set<String> meetingAttendees = event.getAttendees();
       for (String attendee : event.getAttendees()) {
-        if (meetingAttendees.contains(attendee)) {
-          /* Adds the attendee to the mandatory or optional list */
-          if (request.getAttendees().contains(attendee)) {
-            mandatoryBusyTimes.add(event.getWhen());
-          } else if (request.getOptionalAttendees().contains(attendee)) {
-            optionalBusyTimes.add(event.getWhen());
-          }
-          break;
+        /* Adds the attendee to the mandatory or optional list */
+        if (request.getAttendees().contains(attendee)) {
+          mandatoryBusyTimes.add(event.getWhen());
+        } else if (request.getOptionalAttendees().contains(attendee)) {
+          optionalBusyTimes.add(event.getWhen());
         }
+        break;
       }
     }
 
