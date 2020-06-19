@@ -40,7 +40,7 @@ public final class FindMeetingQuery {
      * they contain a person who needs to be in the meetingrequest, and if so adds
      * that event's time range to a list of busy times. The time ranges in that list
      * are then merged if they are overlapping each other so it is a linear sequence 
-     * of time ranges. Then, the function processAvailableTimes returns a list
+     * of time ranges. Then, the function getFreeTimeRanges returns a list
      * of all free time ranges that are long enough for the meeting's duration */
 
     /* Finding all timeranges of existing events that attendees are going to */
@@ -56,11 +56,14 @@ public final class FindMeetingQuery {
       }
     }
 
-    Collection<TimeRange> availableCombinedTimes = findCrossoverTimes(mandatoryBusyTimes, optionalBusyTimes, request.getDuration());
+    List<TimeRange> combinedBusyTimes = new ArrayList<TimeRange>(mandatoryBusyTimes);
+    combinedBusyTimes.addAll(optionalBusyTimes);
+
+    Collection<TimeRange> availableTimes = getFreeTimeRanges(combinedBusyTimes, request.getDuration());
 
     /* If crossover times exist, return them. If not, just find times that work for mandatory attendees */
-    if (!availableCombinedTimes.isEmpty()) {
-      return availableCombinedTimes;
+    if (!availableTimes.isEmpty()) {
+      return availableTimes;
     }
 
     /* If there are no times where the optional people can join, code finds times that work for mandatory only */
@@ -74,41 +77,32 @@ public final class FindMeetingQuery {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
-    Collections.sort(mandatoryBusyTimes, TimeRange.ORDER_BY_START);
+    availableTimes = getFreeTimeRanges(mandatoryBusyTimes, request.getDuration());
 
-    List<TimeRange> mergedMandatoryBusyTimes = new ArrayList<TimeRange>();
-    mergedMandatoryBusyTimes = mergeOverlappingRanges(mandatoryBusyTimes);
-
-    Collection<TimeRange> availableMandatoryTimes = new ArrayList<TimeRange>();
-
-    availableMandatoryTimes = processAvailableTimes(mergedMandatoryBusyTimes, request.getDuration());
-
-    return availableMandatoryTimes;
+    return availableTimes;
   }
   
-  /* Tries to find times that allow mandatory AND optional attendees to attend.
+  /* Tries to find free times in the given list of busy times.
    * If found, only those times are returned.*/
-  public Collection<TimeRange> findCrossoverTimes(List<TimeRange> mandatoryBusyTimes, List<TimeRange> optionalBusyTimes, long duration) {
-    List<TimeRange> combinedBusyTimes = new ArrayList<TimeRange>(mandatoryBusyTimes);
-    combinedBusyTimes.addAll(optionalBusyTimes);
+  public Collection<TimeRange> getFreeTimeRanges(List<TimeRange> busyTimes, long duration) {
 
     /* If none of the attendees are busy at any time, return the whole day */
-    if (combinedBusyTimes.isEmpty()) {
+    if (busyTimes.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
     /* ORDER_BY_START reorders the given list strictly by the TimeRange's start time, regardless
      * of end time. This enables the following merge algorithm to work properly */
-    Collections.sort(combinedBusyTimes, TimeRange.ORDER_BY_START);
+    Collections.sort(busyTimes, TimeRange.ORDER_BY_START);
 
     /* Merges all overlaps in the combined mandatory & optional busy times */
-    List<TimeRange> mergedCombinedBusyTimes = mergeOverlappingRanges(combinedBusyTimes);
+    List<TimeRange> mergedBusyTimes = mergeOverlappingRanges(busyTimes);
 
     /* Checks if there are time ranges that work for both mandatory & optional attendees and returns */
-    Collection<TimeRange> availableCombinedTimes = new ArrayList<TimeRange>();
-    availableCombinedTimes = processAvailableTimes(mergedCombinedBusyTimes, duration);
+    Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
+    availableTimes = calculateFreeRanges(mergedBusyTimes, duration);
 
-    return availableCombinedTimes;
+    return availableTimes;
   }
 
   public List<TimeRange> mergeOverlappingRanges(List<TimeRange> busyTimes) {
@@ -136,7 +130,7 @@ public final class FindMeetingQuery {
     return mergedBusyTimes;
   }
 
-  public Collection<TimeRange> processAvailableTimes(List<TimeRange> mergedBusyTimes, long minDuration) {
+  public Collection<TimeRange> calculateFreeRanges(List<TimeRange> mergedBusyTimes, long minDuration) {
     Collection<TimeRange> availableMeetingTimes = new ArrayList<TimeRange>();
     int availableTimeStart = TimeRange.START_OF_DAY;
     int availableTimeEnd = 0;
