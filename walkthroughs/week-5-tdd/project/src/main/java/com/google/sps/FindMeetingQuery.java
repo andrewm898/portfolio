@@ -35,6 +35,15 @@ public final class FindMeetingQuery {
     /* Gets all busy time ranges for optional and mandatory meeting attendees */
     List<TimeRange> mandatoryBusyTimes = new ArrayList<TimeRange>();
     List<TimeRange> optionalBusyTimes = new ArrayList<TimeRange>();
+
+    /* This function searches through each of the passed in events to check if
+     * they contain a person who needs to be in the meetingrequest, and if so adds
+     * that event's time range to a list of busy times. The time ranges in that list
+     * are then merged if they are overlapping each other so it is a linear sequence 
+     * of time ranges. Then, the function processAvailableTimes returns a list
+     * of all free time ranges that are long enough for the meeting's duration */
+
+    /* Finding all timeranges of existing events that attendees are going to */
     for (Event event : events) {
       for (String attendee : event.getAttendees()) {
         /* Adds the attendee to the mandatory or optional list */
@@ -58,6 +67,7 @@ public final class FindMeetingQuery {
     if (combinedBusyTimes.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
+
 
     /* ORDER_BY_START reorders the given list strictly by the TimeRange's start time, regardless
      * of end time. This enables the following merge algorithm to work properly */
